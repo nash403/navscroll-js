@@ -1,0 +1,38 @@
+{
+  "name": "navscroll-js",
+  "version": "0.0.1",
+  "title": "Nav Scroll JS",
+  "description": "TODO",
+  "main": "navscroll.js",
+  "scripts": {
+    "dev": "webpack --progress --hide-modules",
+    "watch": "webpack --progress --hide-modules --watch",
+    "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "demo": "webpack --progress --hide-modules --config='webpack.demo.config.js'",
+    "watch-demo": "webpack --progress --hide-modules --watch --config='webpack.demo.config.js'"
+  },
+  "repository": {},
+  "keywords": [
+    "vue",
+    "vue-plugin",
+    "vue-component",
+    "vue-directive",
+    "scroll",
+    "navigation",
+    "active-menu-item",
+    "vanilla"
+  ],
+  "author": {
+    "name": "Honoré Nintunze",
+    "email": "nash403@outlook.fr",
+    "url": "https://nintu.me",
+    "twitter": "https://twitter.com/nash_403"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bezier-easing": "*"
+  },
+  "devDependencies": {
+    "webpack": "*"
+  }
+}
