@@ -1,6 +1,6 @@
 import BezierEasing from "bezier-easing";
 import _ from "./utils";
-import defaultProps from "./default-props";
+import defaults, { setDefaults } from "./default-props";
 
 const abortEvents = [ // Events that can cancel the scrollTo fn
     "mousedown",
@@ -10,12 +10,6 @@ const abortEvents = [ // Events that can cancel the scrollTo fn
     "keyup",
     "touchmove"
 ];
-
-export let defaults = Object.assign({}, defaultProps);
-
-export function setDefaults(options) {
-    defaults = Object.assign({}, defaults, options);
-}
 
 export function setLocationHash(hash) {
   if (!hash) return ;
@@ -141,15 +135,15 @@ const scroller = () => {
             );
         }
 
-        container = _.$(options.container || defaults.container);
-        duration = options.duration || defaults.duration;
-        easing = options.easing || defaults.easing;
-        offset = options.offset || defaults.offset;
+        container = _.$(options.container || defaults().container);
+        duration = options.duration || defaults().duration;
+        easing = options.easing || defaults().easing;
+        offset = options.offset || defaults().offset;
         cancelable = options.cancelable !== false;
-        onDone = options.onDone || defaults.onDone;
-        onCancel = options.onCancel || defaults.onCancel;
-        x = options.scrollX === undefined ? defaults.scrollX : options.scrollX;
-        y = options.scrollY === undefined ? defaults.scrollY : options.scrollY;
+        onDone = options.onDone || defaults().onDone;
+        onCancel = options.onCancel || defaults().onCancel;
+        x = options.scrollX === undefined ? defaults().scrollX : options.scrollX;
+        y = options.scrollY === undefined ? defaults().scrollY : options.scrollY;
 
         let cumulativeOffset = _.cumulativeOffset(targetElement);
 

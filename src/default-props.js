@@ -6,7 +6,7 @@ let defaults = {
   * @default 'body'
   * @type {String|HTMLElement}
   */
-  container: "body",
+  container: 'body',
   /**
   * The duration of the scroll animation
   *
@@ -23,7 +23,7 @@ let defaults = {
   * - an array of 4 values in a cubic bezier format
   *
   * @example ".5,0,.35,1"
-  * @default "ease"
+  * @default 'ease'
   * @type {String|Array}
   */
   easing: "ease",
@@ -60,20 +60,6 @@ let defaults = {
   */
   onCancel: false,
   /**
-  * Whether to scroll on the X axis
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  scrollX: false,
-  /**
-  * Whether to scroll on the Y axis
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  scrollY: true,
-  /**
   * Whether to stop the propagation of the click event on a menu item
   *
   * @default true
@@ -88,12 +74,19 @@ let defaults = {
   */
   anchor: true,
   /**
-  * Class that will be applied in the menu item.
+  * Whether to scroll on the X axis
   *
-  * @default  'active'
-  * @type {String}
+  * @default false
+  * @type {Boolean}
   */
-  activeClass: 'active',
+  scrollX: false,
+  /**
+  * Whether to scroll on the Y axis
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  scrollY: true,
   /**
   * Enables/disables the scrolling when clicking in a menu item.
   * Disable if you'd like to handle the scrolling by your own.
@@ -101,7 +94,21 @@ let defaults = {
   * @default true
   * @type {Boolean}
   */
-  clickToScroll: true
+  clickToScroll: true,
+  /**
+  * Class that will be applied in the menu item.
+  *
+  * @default  'active'
+  * @type {String}
+  */
+  activeClass: 'active',
+  /**
+  * Class that will be used to recognize the click-to-scroll navigation items
+  *
+  * @default  'scroll-item'
+  * @type {String}
+  */
+  itemClass: 'scroll-item',
 };
 
 // /**
@@ -120,10 +127,14 @@ let defaults = {
 //   default: false,
 // },
 
-export default defaults;
-export let VueNavScrollProps = getVueComponentProps(defaults);
 
-export function getVueComponentProps(params) {
+export const setDefaults = (options) => defaults = Object.assign({}, defaults, options);
+
+export default function getDefaults(options) { return defaults; }
+
+export const getVueComponentProps = (params) => params ? _getVueComponentProps(params) : _getVueComponentProps(defaults)
+
+export function _getVueComponentProps(params) {
   let props = {}
   for (let prop in params) {
     let type = getType(params[prop]);
