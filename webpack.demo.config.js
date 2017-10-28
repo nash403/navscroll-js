@@ -1,38 +1,51 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require('webpack')
 
 module.exports = {
-  entry: ['./examples/src/main.js', './examples/src/main.scss'],
+  entry: [path.resolve(__dirname, 'examples', 'src', 'main.js')],
   output: {
-    path: path.resolve(__dirname, '../examples/assets'),
+    path: path.resolve(__dirname, 'examples/assets'),
     publicPath: '/examples/assets/',
     filename: 'main.js',
+    library: ['navscroll'],
+    libraryTarget: 'umd'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+        options: {
+          presets: [
+            ['env', {
+              modules: false,
+              useBuiltIns: true,
+              targets: {
+                browsers: [
+                  'Chrome >= 60',
+                  'Safari >= 11',
+                  'iOS >= 10.3',
+                  'Firefox >= 54',
+                  'Edge >= 15',
+                ],
+              },
+            }],
+          ],
+        }
       },
-      {
-        test: /\.vue$/,
-        exclude: /node_modules/,
-        loader: 'vue-loader',
-      },
-    ],
-    rules: [
       {
         test: /\.css$/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract({
-          loader: 'css-loader',
+          use: 'css-loader',
         }),
       },
       {
         test: /\.(sass|scss)$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
+        loader: ExtractTextPlugin.extract({
           fallback: [{
             loader: 'style-loader',
           }],
@@ -49,9 +62,10 @@ module.exports = {
           ],
         }),
       },
-    ],
+    ]
   },
   plugins: [
+    new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
     new ExtractTextPlugin({
       filename: '[name].css',
       allChunks: true,
