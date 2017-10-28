@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/examples/assets/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__default_easings__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__default_easings__ = __webpack_require__(8);
 
 
 // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
@@ -142,20 +142,187 @@ try {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-module.exports = __webpack_require__(2);
+"use strict";
+/* unused harmony export VueNavScrollProps */
+/* unused harmony export getVueComponentProps */
+let defaults = {
+  /**
+  * The scrollable container.
+  * It can be a selector string or the HTML element itself
+  *
+  * @default 'body'
+  * @type {String|HTMLElement}
+  */
+  container: "body",
+  /**
+  * The duration of the scroll animation
+  *
+  * @default 600
+  * @type {Number}
+  */
+  duration: 600,
+  /**
+  * Your custom easing value for the click to scroll functionality.
+  * It must be:
+  * - a string with 4 values separated by commas in a cubic bezier format.
+  * - a string value among one of the following values:
+  *       'ease', 'linear', 'ease-in', 'ease-out' or 'ease-in-out'
+  * - an array of 4 values in a cubic bezier format
+  *
+  * @example ".5,0,.35,1"
+  * @default "ease"
+  * @type {String|Array}
+  */
+  easing: "ease",
+  /**
+  * Amount of space between top of screen and the section to
+  * highlight.
+  *
+  * @default 0
+  * @type {Number}
+  */
+  offset: 0,
+  /**
+  * Allow the scroll animation to be cancelled.
+  * In that case, events like 'keyup' or 'touchmove' will cancel the animation
+  * and scroll the content immediately to the target.
+  *
+  * @default 0
+  * @type {Boolean}
+  */
+  cancelable: true,
+  /**
+  * Callback called when scrolling is finished.
+  * Also called when the scroll animation is cancelled.
+  *
+  * @default false
+  * @type {Function|Boolean}
+  */
+  onDone: false,
+  /**
+  * Callback called when the scroll animation is cancelled.
+  *
+  * @default false
+  * @type {Function|Boolean}
+  */
+  onCancel: false,
+  /**
+  * Whether to scroll on the X axis
+  *
+  * @default false
+  * @type {Boolean}
+  */
+  scrollX: false,
+  /**
+  * Whether to scroll on the Y axis
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  scrollY: true,
+  /**
+  * Whether to stop the propagation of the click event on a menu item
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  stopPropagation: true,
+  /**
+  * Whether to update window.location.hash when a link menu item with a href is clicked
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  anchor: true,
+  /**
+  * Class that will be applied in the menu item.
+  *
+  * @default  'active'
+  * @type {String}
+  */
+  activeClass: 'active',
+  /**
+  * Enables/disables the scrolling when clicking in a menu item.
+  * Disable if you'd like to handle the scrolling by your own.
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  clickToScroll: true
+};
 
+// /**
+// * Defines if the plugin should track the section change when
+// * clicking an item to scroll to its section. If set to true,
+// * it will always keep track and change the active class to the
+// * current section while scrolling, if false, the active class
+// * will be immediately applied to the clicked menu item, ignoring
+// * the passed sections until the scrolling is over.
+// *
+// * @default false
+// * @type {Boolean}
+// */
+// alwaysTrack: {
+//   type: Boolean,
+//   default: false,
+// },
+
+/* harmony default export */ __webpack_exports__["a"] = (defaults);
+let VueNavScrollProps = getVueComponentProps(defaults);
+
+function getVueComponentProps(params) {
+  let props = {};
+  for (let prop in params) {
+    let type = getType(params[prop]);
+    props[prop] = {
+      type,
+      default: type === Array || type === Object ? () => params[prop] : params[prop]
+    };
+  }
+  return props;
+}
+
+function getType(value) {
+  const type = obj => Object.prototype.toString.call(obj).slice(8, -1);
+
+  switch (type(value)) {
+    case 'Object':
+      return Object;
+    case 'Array':
+      return Array;
+    case 'String':
+      return String;
+    case 'Number':
+      return Number;
+    case 'Boolean':
+      return Boolean;
+    case 'RegExp':
+      return RegExp;
+    case 'Undefined':
+    case 'Null':
+    default:
+      return null;
+  }
+}
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(3);
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__main_scss__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_scrollto_directive__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_scrollto_directive__ = __webpack_require__(5);
 
 
 
@@ -183,18 +350,20 @@ new Vue({
 });
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scrollTo__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scrollTo__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_props__ = __webpack_require__(1);
+
 
 
 
@@ -235,32 +404,38 @@ function getBinding(el) {
 }
 
 function handleClick(e) {
-    let event = e;
-    event.preventDefault();
-    let options = getBinding(this).binding.value;
+    e.preventDefault();
 
-    if (options.stopPropagation === undefined) event.stopPropagation();else options.stopPropagation && event.stopPropagation();
+    const options = getBinding(this).binding.value;
 
-    const hrefDefault = options.hrefDefault === undefined ? true : options.hrefDefault;
-    const hash = event.currentTarget.hash;
+    const event = e;
+    // element on which the click event was registered
     const targetEl = event.currentTarget;
-    const userOnDone = options.onDone && typeof options.onDone === "function" ? options.onDone : false;
+    // hash of the element it is a `<a>`
+    const hash = targetEl.hash;
+    // stop propagation or not
+    const stop = options.stopPropagation === undefined ? __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */].stopPropagation : options.stopPropagation;
+    // keep default behavior of anchor link and update window.location
+    const keepHrefDefault = options.anchor === undefined ? __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */].anchor : options.anchor;
+    // class to add to clicked element when scrolling is done
+    const activeClass = options.activeClass === undefined ? __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */].activeClass : options.activeClass;
+    // callback called when scrolling is done
+    const userOnDone = options.onDone && typeof options.onDone === "function" ? options.onDone : __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */].onDone;
 
-    const onDone = !!hrefDefault ? () => {
+    if (stop) event.stopPropagation();
+
+    const onDone = keepHrefDefault ? () => {
         Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["b" /* setLocationHash */])(hash);
-
-        if (options.activeClass !== undefined) {
-            targetEl.classList.add(typeof options.activeClass === "string" ? options.activeClass : 'active');
-        }
-
+        targetEl.classList.add(activeClass);
         if (userOnDone) userOnDone();
     } : userOnDone;
 
     if (typeof options === "string") {
         return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone });
     }
+
     options.onDone = onDone;
-    Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element || event.currentTarget.hash, options);
+    Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element || hash, options);
 }
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -281,39 +456,32 @@ function handleClick(e) {
 });
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export defaults */
 /* unused harmony export setDefaults */
 /* harmony export (immutable) */ __webpack_exports__["b"] = setLocationHash;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_bezier_easing__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_bezier_easing__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_bezier_easing___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_bezier_easing__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_props__ = __webpack_require__(1);
+
 
 
 
 const abortEvents = [// Events that can cancel the scrollTo fn
 "mousedown", "wheel", "DOMMouseScroll", "mousewheel", "keyup", "touchmove"];
 
-let defaults = {
-    container: "body",
-    duration: 500,
-    easing: "ease",
-    offset: 0,
-    cancelable: true,
-    onDone: false,
-    onCancel: false,
-    scrollX: false,
-    scrollY: true
-};
+let defaults = __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */];
 
 function setDefaults(options) {
     defaults = Object.assign({}, defaults, options);
 }
 
 function setLocationHash(hash) {
+    if (!hash) return;
     if (window.history.pushState) {
         window.history.pushState(null, null, hash);
     } else {
@@ -475,7 +643,7 @@ const _scroller = scroller();
 /* harmony default export */ __webpack_exports__["a"] = (_scroller);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /**
@@ -585,7 +753,7 @@ module.exports = function bezier (mX1, mY1, mX2, mY2) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

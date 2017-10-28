@@ -1,5 +1,6 @@
 import BezierEasing from "bezier-easing";
 import _ from "./utils";
+import defaultProps from "./default-props";
 
 const abortEvents = [ // Events that can cancel the scrollTo fn
     "mousedown",
@@ -10,23 +11,14 @@ const abortEvents = [ // Events that can cancel the scrollTo fn
     "touchmove"
 ];
 
-export let defaults = {
-    container: "body",
-    duration: 500,
-    easing: "ease",
-    offset: 0,
-    cancelable: true,
-    onDone: false,
-    onCancel: false,
-    scrollX: false,
-    scrollY: true
-};
+export let defaults = defaultProps
 
 export function setDefaults(options) {
     defaults = Object.assign({}, defaults, options);
 }
 
 export function setLocationHash(hash) {
+  if (!hash) return ;
   if (window.history.pushState) {
       window.history.pushState(null, null, hash);
   }

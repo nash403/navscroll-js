@@ -1,5 +1,6 @@
 import scrollTo, { setLocationHash } from "./scrollTo";
 import _ from "./utils";
+import defaultProps from "./default-props";
 
 let bindings = []; // store binding data
 
@@ -40,33 +41,38 @@ function getBinding(el) {
 }
 
 function handleClick(e) {
-    let event = e
-    event.preventDefault();
-    let options = getBinding(this).binding.value;
+    e.preventDefault();
 
-    if (options.stopPropagation === undefined) event.stopPropagation()
-    else options.stopPropagation && event.stopPropagation()
+    const options = getBinding(this).binding.value;
 
-    const hrefDefault = options.hrefDefault === undefined ? true : options.hrefDefault
-    const hash = event.currentTarget.hash
-    const targetEl = event.currentTarget
-    const userOnDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : false
+    const event = e;
+    // element on which the click event was registered
+    const targetEl = event.currentTarget;
+    // hash of the element it is a `<a>`
+    const hash = targetEl.hash;
+    // stop propagation or not
+    const stop = (options.stopPropagation === undefined) ? defaultProps.stopPropagation : options.stopPropagation;
+    // keep default behavior of anchor link and update window.location
+    const keepHrefDefault = (options.anchor === undefined) ? defaultProps.anchor : options.anchor;
+    // class to add to clicked element when scrolling is done
+    const activeClass = (options.activeClass === undefined) ? defaultProps.activeClass : options.activeClass;
+    // callback called when scrolling is done
+    const userOnDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : defaultProps.onDone
 
-    const onDone = !!hrefDefault ? () => {
+    if (stop) event.stopPropagation()
+
+    const onDone = keepHrefDefault ? () => {
       setLocationHash(hash)
-
-      if (options.activeClass !== undefined) {
-        targetEl.classList.add(typeof options.activeClass === "string" ? options.activeClass : 'active')
-      }
-
+      targetEl.classList.add(activeClass)
       if (userOnDone) userOnDone()
     } : userOnDone
 
     if (typeof options === "string") {
       return scrollTo(options, {onDone});
     }
+
     options.onDone = onDone
-    scrollTo(options.el || options.element || event.currentTarget.hash, options);
+    scrollTo(options.el || options.element || hash, options);
 }
 
 export default {

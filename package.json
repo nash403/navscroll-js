@@ -5,6 +5,7 @@
   "description": "TODO",
   "main": "navscroll.js",
   "scripts": {
+    "all": "yarn dev && yarn demo",
     "dev": "webpack --progress --hide-modules",
     "watch": "webpack --progress --hide-modules --watch",
     "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
