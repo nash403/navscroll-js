@@ -8,8 +8,6 @@ module.exports = {
     path: path.resolve(__dirname, 'examples/assets'),
     publicPath: '/examples/assets/',
     filename: 'main.js',
-    library: ['navscroll'],
-    libraryTarget: 'umd'
   },
   module: {
     rules: [

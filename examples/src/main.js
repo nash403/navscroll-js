@@ -1,6 +1,6 @@
 import './main.scss'
 
-import NavScroll from '../../src/scrollto-directive'
+import NavScroll from '../../navscroll'
 
 new Vue({
   el: '#app',

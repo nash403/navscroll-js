@@ -11,7 +11,7 @@ const abortEvents = [ // Events that can cancel the scrollTo fn
     "touchmove"
 ];
 
-export let defaults = defaultProps
+export let defaults = Object.assign({}, defaultProps);
 
 export function setDefaults(options) {
     defaults = Object.assign({}, defaults, options);
