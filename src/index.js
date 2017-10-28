@@ -1,4 +1,4 @@
-import NavScroll from "./scrollto-directive";
+import NavScroll from "./navscroll";
 import { setDefaults } from "./scrollTo";
 
 const install = function(Vue, options) {
