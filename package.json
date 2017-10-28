@@ -9,7 +9,7 @@
     "watch": "webpack --progress --hide-modules --watch",
     "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "demo": "webpack --progress --hide-modules --config='webpack.demo.config.js'",
-    "watch-demo": "webpack --progress --hide-modules --watch --config='webpack.demo.config.js'"
+    "watch:demo": "webpack --progress --hide-modules --watch --config='webpack.demo.config.js'"
   },
   "repository": {},
   "keywords": [
