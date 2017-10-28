@@ -1,0 +1,48 @@
+{
+  "name": "navscroll-js",
+  "version": "0.0.1",
+  "title": "Nav Scroll JS",
+  "description": "TODO",
+  "main": "navscroll.js",
+  "scripts": {
+    "dev": "webpack --progress --hide-modules",
+    "watch": "webpack --progress --hide-modules --watch",
+    "prod": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "demo": "webpack --progress --hide-modules --config='webpack.demo.config.js'",
+    "watch:demo": "webpack --progress --hide-modules --watch --config='webpack.demo.config.js'"
+  },
+  "repository": {},
+  "keywords": [
+    "vue",
+    "vue-plugin",
+    "vue-component",
+    "vue-directive",
+    "scroll",
+    "navigation",
+    "active-menu-item",
+    "vanilla"
+  ],
+  "author": {
+    "name": "Honoré Nintunze",
+    "email": "nash403@outlook.fr",
+    "url": "https://nintu.me",
+    "twitter": "https://twitter.com/nash_403"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bezier-easing": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.1",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "uglifyjs-webpack-plugin": "^1.0.1",
+    "webpack": "^3.8.1"
+  }
+}

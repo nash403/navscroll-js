@@ -1,0 +1,64 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>NavSroll.js</title>
+  <link rel="icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="assets/main.css">
+</head>
+
+<body>
+  <div id="app">
+
+    <div class="sidebar">
+      <div class="logo">
+          <img src="logo.png"  width="80" height="80" alt="Navscroll logo"/>
+      </div>
+      <h2>NavScroll.js</h2>
+      <nav class="nav-scroll-items entries">
+        <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
+            v-scroll-to="{
+                el: `#${entry}-target`,
+                offset: -20,
+                container:'#scrollable-content',
+                activeClass,
+                onDone: () => { innerOnDone(i) }
+            }">
+            <span class="entry-name">Go to Table {{entry}}-target</span>
+        </a>
+      </nav>
+      <p class="cc-note">Favicon by Yaroslav Samoilov from the Noun Project</p>
+    </div> <!-- sidebar -->
+
+    <div class="content">
+        <div class="header">
+            <h1 id="navscroll-title">See how <code>navscroll.js</code> works great! 🚀</h1>
+        </div>
+
+        <main id="scrollable-content">
+
+            <section class="card-section" ref="targets" :id="`${target}-target`" v-for="(target, i) of entries" :key="target">
+                <h3>Table {{target}}</h3>
+                <table>
+                <thead>
+                    <th v-for="header of [1, 2, 3, 4, 5, 6]">HEADER {{header}}</th>
+                </thead>
+                <tbody>
+                    <tr v-for="line of Array.from(new Array(25), (_,i)=>i)"  :key="'line-'+line">
+                        <td v-for="cell of [1, 2, 3, 4, 5, 6]" :key="'cell-'+cell">CELL {{cell}} / LINE {{line}}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </section>
+
+        </main>
+    </div>
+
+  </div> <!-- #app -->
+
+  <script src="https://unpkg.com/vue@2.5.2/dist/vue.js"></script>
+  <script type="text/javascript" src="assets/main.js"></script>
+</body>
+
+</html>

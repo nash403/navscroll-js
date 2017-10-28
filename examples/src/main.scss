@@ -1,0 +1,205 @@
+@import "normalize";
+
+
+*,
+*::after,
+ ::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font: 16px 'Open Sans';
+  font-family: 'Ubuntu Mono', monospace;
+  font-weight: 300;
+  color: #555;
+  background-color: #FAFCFD;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#app {
+    height: 100%;
+    overflow: hidden;
+
+    .content {
+        overflow: hidden;
+
+        .header {
+            padding: 0.67em 2em;
+            box-shadow: 0 10px 10px RGBA(75,92,109,0.3);
+            z-index: 999;
+
+            h1#navscroll-title {
+                margin: 8px 0;
+
+                code {
+                    color: rgb(245, 142, 142);
+                }
+            }
+        }
+
+        #scrollable-content {
+            z-index: -1;
+            width: 100%;
+            position: relative;
+            height: calc(100vh - 5em);
+            overflow: auto;
+            padding: 2em 2.5em 1em;
+
+            .card-section {
+                margin: 0 auto 2em;
+                min-width: 400px;
+                min-height: 3em;
+                border-radius: 5px;
+                color: #555;
+                background-color: #ffffff;
+                box-shadow: 0 5px 20px rgba(85, 85, 85, 0.1);
+                overflow: auto;
+
+                h3 {
+                    color: #5f7770;
+                    margin: 0;
+                    padding: 0.6em 1.3em;
+                    background-color: rgba(#3BB86C, 0.2);
+                }
+
+                table {
+                    font-family: 'Ubuntu Mono';
+                    min-width: 100%;
+                    font-size: 0.8em;
+                    border-spacing: 1px;
+
+                    td, th {
+                        padding: .5em 1em;
+                        text-align: center;
+                    }
+
+                    th {
+                        font-weight: normal !important;
+                        background-color: #485B55;
+                        color: #efefef;
+                    }
+
+                    tr {
+                        &:nth-child(even) {
+                            background-color: rgba(72, 91, 85, 0.05);
+                        }
+                        &:hover {
+                            background-color: rgba(253, 150, 159, 0.2);
+                        }
+                    }
+                }
+            }
+        }
+    } // End content
+
+    .sidebar {
+        width: 15rem;
+        height: 100%;
+        float: left;
+        background-image: linear-gradient(135deg, #5f7770, #485B55);
+        font-size: 0.8rem;
+        position: relative;
+        color: #D6D9DD;
+        min-height: 600px;
+
+        > * {
+            float: left;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            background: RGBA(75,92,109,0.4);
+            padding: 2em 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 1.2em 0;
+            text-decoration: underline;
+        }
+
+        .cc-note {
+            color: lighten(#4B5C6D, 40%);
+            border-top: 1px solid rgba(#FFF, 0.1);
+            padding: 0.5em 1em;
+            @media screen and (min-height: 600px) {
+                position: absolute;
+                bottom: 0;
+            }
+        }
+
+        .entries {
+            margin-top: 2em;
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            direction: rtl;
+            max-height: 60vh;
+            &::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+                border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                background: #3f504a;
+            }
+
+            &::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                background: transparent;
+            }
+            .entry {
+                padding: 0.5em 3em;
+                position: relative;
+                text-transform: capitalize;
+                display: flex;
+                justify-content: center;
+                padding: 0.5em 1em;
+                cursor: pointer;
+                direction: ltr;
+
+                .entry-name {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    transition: color 0.1s;
+                    height: 2rem;
+                    display: inline-flex;
+                    align-items: center;
+                }
+
+                &.active-position {
+                    background-color: rgba(255, 255, 255, 0.1);
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        right: 0;
+                        transform: translateY(-50%);
+                        border: 10px solid transparent;
+                        border-right-color: #FAFCFD;
+                    }
+                }
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.1);
+                }
+            }
+        }
+    } // End sidebar
+}
