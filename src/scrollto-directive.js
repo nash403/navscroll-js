@@ -47,11 +47,20 @@ function handleClick(e) {
     if (options.stopPropagation === undefined) event.stopPropagation()
     else options.stopPropagation && event.stopPropagation()
 
-
     const hrefDefault = options.hrefDefault === undefined ? true : options.hrefDefault
-    const onDone = hrefDefault ? () => {
-      setLocationHash(event.currentTarget.hash)
-    } : false
+    const hash = event.currentTarget.hash
+    const targetEl = event.currentTarget
+    const userOnDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : false
+
+    const onDone = !!hrefDefault ? () => {
+      setLocationHash(hash)
+
+      if (options.activeClass !== undefined) {
+        targetEl.classList.add(typeof options.activeClass === "string" ? options.activeClass : 'active')
+      }
+
+      if (userOnDone) userOnDone()
+    } : userOnDone
 
     if (typeof options === "string") {
       return scrollTo(options, {onDone});
