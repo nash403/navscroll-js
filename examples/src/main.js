@@ -1,6 +1,6 @@
 import './main.scss'
 
-import NavScroll from '../../navscroll'
+import NavScroll from '../../src'
 
 new Vue({
   el: '#app',
@@ -17,9 +17,8 @@ new Vue({
     this.$refs.entries[0].classList.add(this.activeClass)
   },
   methods: {
-    innerOnDone (entryIndex) {
-      // remove active class on all elements but the current active one
-      this.$refs.entries.forEach((e,i) => i !== entryIndex && e.classList.remove(this.activeClass));
+    resetActiveClass (entryIndex) {
+      this.$refs.entries.forEach((e,i) => e.classList.remove(this.activeClass));
     }
   }
 })

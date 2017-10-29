@@ -1,4 +1,4 @@
-import scrollTo, { setLocationHash } from "./scrollTo";
+import scrollTo from "./scrollTo";
 import _ from "./utils";
 import defaults from "./default-props";
 
@@ -46,33 +46,21 @@ function handleClick(e) {
     const options = getBinding(this).binding.value;
     const defaultOpts = defaults()
 
-    const event = e;
-    // element on which the click event was registered
-    const targetEl = event.currentTarget;
-    // hash of the element it is a `<a>`
-    const hash = targetEl.hash;
+    const clickedElement = event.currentTarget;
     // stop propagation or not
     const stop = (options.stopPropagation === undefined) ? defaultOpts.stopPropagation : options.stopPropagation;
-    // keep default behavior of anchor link and update window.location
-    const keepHrefDefault = (options.anchor === undefined) ? defaultOpts.anchor : options.anchor;
-    // class to add to clicked element when scrolling is done
-    const activeClass = (options.activeClass === undefined) ? defaultOpts.activeClass : options.activeClass;
     // callback called when scrolling is done
-    const userOnDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : defaultOpts.onDone
+    const onDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : defaultOpts.onDone
 
-    if (stop) event.stopPropagation()
-
-    const onDone = keepHrefDefault ? () => {
-      setLocationHash(hash)
-      targetEl.classList.add(activeClass)
-      if (userOnDone) userOnDone()
-    } : userOnDone
+    if (stop) e.stopPropagation()
 
     if (typeof options === "string") {
-      return scrollTo(options, {onDone});
+      return scrollTo(options, {onDone, clickedNavItem: clickedElement, /* navItems: ... */ });
     }
 
     options.onDone = onDone
+    options.clickedNavItem = clickedElement
+    // options.navItems = ...
     scrollTo(options.el || options.element || hash, options);
 }
 

@@ -48,17 +48,17 @@ let defaults = {
   * Callback called when scrolling is finished.
   * Also called when the scroll animation is cancelled.
   *
-  * @default false
-  * @type {Function|Boolean}
+  * @default null
+  * @type {Function}
   */
-  onDone: false,
+  onDone: null,
   /**
   * Callback called when the scroll animation is cancelled.
   *
-  * @default false
-  * @type {Function|Boolean}
+  * @default null
+  * @type {Function}
   */
-  onCancel: false,
+  onCancel: null,
   /**
   * Whether to stop the propagation of the click event on a menu item
   *
@@ -73,6 +73,16 @@ let defaults = {
   * @type {Boolean}
   */
   anchor: true,
+  /**
+  * Hash of the target section.
+  * It will be applyed to window.location.hash if the `anchor` option is set to true.
+  * If the `clickedNavItem` option is set and the element has a hash it will have priority
+  * to this option.
+  *
+  * @default null
+  * @type {String}
+  */
+  hash: null,
   /**
   * Whether to scroll on the X axis
   *
@@ -96,6 +106,42 @@ let defaults = {
   */
   clickToScroll: true,
   /**
+  * The reference to the navigation element that was clicked to trigger the scroll.
+  *
+  * @default null
+  * @type {HTMLElement}
+  */
+  clickedNavItem: null,
+  /**
+  * An array of navigation elements that can be clicked to trigger
+  * a scroll to their target section.
+  *
+  * @default []
+  * @type {Array<HTMLElement>}
+  */
+  navItems: [],
+  /**
+  * Defines whether to track section changes when
+  * clicking an item to scroll to its section. If set to true,
+  * the scrolling listener will always keep track and change the active class
+  * to the current section while scrolling, if false, the scrolling handler provided
+  * with the `trackingFn` option will be removed temporarily from the scrolling container
+  * and the active class will be immediately applied to the clicked menu item, ignoring
+  * the passed sections until the scrolling is over.
+  *
+  * @default false
+  * @type {Boolean}
+  */
+  alwaysTrack: false,
+  /**
+  * Scrolling listener on the container that should be removed when
+  * the `alwaysTrack` option is set to false.
+  *
+  * @default null
+  * @type {Function}
+  */
+  trackingFn: null,
+  /**
   * Class that will be applied in the menu item.
   *
   * @default  'active'
@@ -110,22 +156,6 @@ let defaults = {
   */
   itemClass: 'scroll-item',
 };
-
-// /**
-// * Defines if the plugin should track the section change when
-// * clicking an item to scroll to its section. If set to true,
-// * it will always keep track and change the active class to the
-// * current section while scrolling, if false, the active class
-// * will be immediately applied to the clicked menu item, ignoring
-// * the passed sections until the scrolling is over.
-// *
-// * @default false
-// * @type {Boolean}
-// */
-// alwaysTrack: {
-//   type: Boolean,
-//   default: false,
-// },
 
 
 export const setDefaults = (options) => defaults = Object.assign({}, defaults, options);
