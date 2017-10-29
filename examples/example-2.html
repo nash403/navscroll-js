@@ -2,7 +2,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>NavSroll.js</title>
+  <title>NavSroll.js (example 3)</title>
   <link rel="icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
@@ -29,15 +29,14 @@
           <img src="logo.png"  width="80" height="80" alt="Navscroll logo"/>
       </div>
       <h2>NavScroll.js</h2>
-      <nav class="nav-scroll-items entries">
+      <nav class="nav-scroll-items entries"
+        v-navscroll:scroll-item="{
+            container:'#scrollable-content',
+            activeClass,
+        }">
         <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
             @click="resetActiveClass(i)"
-            v-navscroll="{
-                el: `#${entry}-target`,
-                offset: 20,
-                container:'#scrollable-content',
-                activeClass,
-            }">
+            >
             <span class="entry-name">Go to Table {{entry}}</span>
         </a>
       </nav>
@@ -47,6 +46,7 @@
     <div class="content">
         <div class="header">
             <h1 id="navscroll-title">See how <code>navscroll.js</code> works great! 🚀</h1>
+            <small>(example with the navscroll directive bound to the navigation container element)</small>
         </div>
 
         <main id="scrollable-content">

@@ -30,7 +30,7 @@ const baseConfig = {
     path: __dirname,
     publicPath: '/',
     filename: '[name].js',
-    library: ['navscroll'],
+    library: 'NavScroll',
     libraryTarget: 'umd',
   },
   plugins: PROD ? [

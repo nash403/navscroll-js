@@ -1,5 +1,6 @@
 import BezierEasing from "bezier-easing";
 import _ from "./utils";
+import defaults, { setDefaults } from "./default-props";
 
 const abortEvents = [ // Events that can cancel the scrollTo fn
     "mousedown",
@@ -10,23 +11,8 @@ const abortEvents = [ // Events that can cancel the scrollTo fn
     "touchmove"
 ];
 
-export let defaults = {
-    container: "body",
-    duration: 500,
-    easing: "ease",
-    offset: 0,
-    cancelable: true,
-    onDone: false,
-    onCancel: false,
-    scrollX: false,
-    scrollY: true
-};
-
-export function setDefaults(options) {
-    defaults = Object.assign({}, defaults, options);
-}
-
 export function setLocationHash(hash) {
+  if (!hash) return ;
   if (window.history.pushState) {
       window.history.pushState(null, null, hash);
   }
@@ -46,6 +32,13 @@ const scroller = () => {
     let onCancel; // callback when scrolling is canceled / aborted
     let x; // scroll on x axis
     let y; // scroll on y axis
+    let activeClass; // class of the current navigation item
+    let clickedNavItem; // the navigation item that triggered the scrollTo
+    let hash; // hash of the clicked item if it is a link
+    let anchor; // whether to update the window.location.hash or not
+    let navItems; // the navigation items array including the clicked one
+    let alwaysTrack; // whether to keep listening to the scroll event on the container
+    let trackingFn; // the scroll event listener on the container
 
     let initialX; // initial X of container
     let targetX; // target X of container
@@ -110,13 +103,18 @@ const scroller = () => {
             initialX + diffX * progress
         );
 
-        timeElapsed < duration ? window.requestAnimationFrame(step) : done();
+        timeElapsed < duration ? window.AFRequestID = window.requestAnimationFrame(step) : done();
     }
 
     function done() {
         if (!abort) topLeft(container, targetY, targetX);
         timeStart = false;
 
+        anchor && setLocationHash(hash)
+        if (alwaysTrack && !trackingFn) {
+          updateClassName(clickedNavItem, navItems)
+        }
+        _.on(container, 'scroll', trackingFn, { passive: true })
         _.off(container, abortEvents, abortFn);
         if (abort && onCancel) onCancel(abortEv);
         if (!abort && onDone) onDone();
@@ -134,6 +132,13 @@ const scroller = () => {
         }
     }
 
+    function updateClassName(element, otherElements) {
+      otherElements.forEach((elem) => {
+        elem.classList.remove(activeClass);
+      })
+      element && element.classList.add(activeClass);
+    }
+
     function scrollTo(target, _duration, options = {}) {
         if (typeof _duration === "object") {
             options = _duration;
@@ -149,23 +154,36 @@ const scroller = () => {
             );
         }
 
-        container = _.$(options.container || defaults.container);
-        duration = options.duration || defaults.duration;
-        easing = options.easing || defaults.easing;
-        offset = options.offset || defaults.offset;
+        const defaultOpts = defaults();
+        container = _.$(options.container || defaultOpts.container);
+        if (!container) {
+          return console.warn(
+            `[navscroll-js]: Scrolling container "${options.container || defaultOpts.container}" is not present on the page.`
+          );
+        }
+        duration = options.duration || defaultOpts.duration;
+        easing = options.easing || defaultOpts.easing;
+        offset = options.offset || defaultOpts.offset;
         cancelable = options.cancelable !== false;
-        onDone = options.onDone || defaults.onDone;
-        onCancel = options.onCancel || defaults.onCancel;
-        x = options.scrollX === undefined ? defaults.scrollX : options.scrollX;
-        y = options.scrollY === undefined ? defaults.scrollY : options.scrollY;
+        onDone = options.onDone || defaultOpts.onDone;
+        onCancel = options.onCancel || defaultOpts.onCancel;
+        x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
+        y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
+        activeClass = (options.activeClass === undefined) ? defaultOpts.activeClass : options.activeClass;
+        clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem;
+        hash = clickedNavItem ? clickedNavItem.hash : options.hash || defaultOpts.hash;
+        anchor = (options.anchor === undefined) ? defaultOpts.anchor : options.anchor;
+        navItems = options.navItems || defaultOpts.navItems;
+        alwaysTrack = (options.alwaysTrack === undefined) ? defaultOpts.alwaysTrack : options.alwaysTrack;
+        trackingFn = (typeof options.trackingFn === 'function') ? options.trackingFn : defaultOpts.trackingFn;
 
         let cumulativeOffset = _.cumulativeOffset(targetElement);
 
         initialY = scrollTop(container);
-        targetY = cumulativeOffset.top - container.offsetTop + offset;
+        targetY = cumulativeOffset.top - container.offsetTop - offset;
 
         initialX = scrollLeft(container);
-        targetX = cumulativeOffset.left - container.offsetLeft + offset;
+        targetX = cumulativeOffset.left - container.offsetLeft - offset;
 
         abort = false;
 
@@ -177,6 +195,12 @@ const scroller = () => {
         easingFn = BezierEasing.apply(BezierEasing, easing);
 
         if (!diffY && !diffX) return;
+
+        if (!alwaysTrack) {
+          _.off(container, 'scroll', trackingFn);
+          window.cancelAnimationFrame(window.AFRequestID);
+          updateClassName(clickedNavItem, navItems)
+        }
 
         _.on(container, abortEvents, abortFn, { passive: true });
 

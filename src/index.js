@@ -1,5 +1,5 @@
-import NavScroll from "./scrollto-directive";
-import { setDefaults } from "./scrollTo";
+import NavScroll from "./navscroll";
+import defaults, { setDefaults } from "./default-props";
 
 const install = function(Vue, options) {
     if (options) setDefaults(options);
@@ -7,11 +7,13 @@ const install = function(Vue, options) {
     Vue.prototype.$scrollTo = NavScroll.scrollTo;
 };
 
+NavScroll.install = install;
+NavScroll.setDefaults = setDefaults;
+NavScroll.getDefaults = defaults;
+
 if (typeof window !== "undefined" && window.Vue) {
     window.NavScroll = NavScroll;
-    window.NavScroll.setDefaults = setDefaults;
     Vue.use(install);
 }
 
-NavScroll.install = install;
 export default NavScroll;
