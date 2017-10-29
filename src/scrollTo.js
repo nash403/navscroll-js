@@ -135,23 +135,29 @@ const scroller = () => {
             );
         }
 
-        container = _.$(options.container || defaults().container);
-        duration = options.duration || defaults().duration;
-        easing = options.easing || defaults().easing;
-        offset = options.offset || defaults().offset;
+        const defaultOpts = defaults();
+        container = _.$(options.container || defaultOpts.container);
+        if (!container) {
+          return console.warn(
+            `[navscroll-js]: Scrolling container "${options.container || defaultOpts.container}" is not present on the page.`
+          );
+        }
+        duration = options.duration || defaultOpts.duration;
+        easing = options.easing || defaultOpts.easing;
+        offset = options.offset || defaultOpts.offset;
         cancelable = options.cancelable !== false;
-        onDone = options.onDone || defaults().onDone;
-        onCancel = options.onCancel || defaults().onCancel;
-        x = options.scrollX === undefined ? defaults().scrollX : options.scrollX;
-        y = options.scrollY === undefined ? defaults().scrollY : options.scrollY;
+        onDone = options.onDone || defaultOpts.onDone;
+        onCancel = options.onCancel || defaultOpts.onCancel;
+        x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
+        y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
 
         let cumulativeOffset = _.cumulativeOffset(targetElement);
 
         initialY = scrollTop(container);
-        targetY = cumulativeOffset.top - container.offsetTop + offset;
+        targetY = cumulativeOffset.top - container.offsetTop - offset;
 
         initialX = scrollLeft(container);
-        targetX = cumulativeOffset.left - container.offsetLeft + offset;
+        targetX = cumulativeOffset.left - container.offsetLeft - offset;
 
         abort = false;
 

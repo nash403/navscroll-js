@@ -33,7 +33,7 @@
         <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
             v-scroll-to="{
                 el: `#${entry}-target`,
-                offset: -20,
+                offset: 20,
                 container:'#scrollable-content',
                 activeClass,
                 onDone: () => { innerOnDone(i) }
