@@ -5,7 +5,7 @@ import NavScroll from '../../src'
 new Vue({
   el: '#app',
   directives: {
-    'scroll-to': NavScroll
+    'navscroll': NavScroll
   },
   data () {
     return {

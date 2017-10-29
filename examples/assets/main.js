@@ -366,7 +366,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 new Vue({
   el: '#app',
   directives: {
-    'scroll-to': __WEBPACK_IMPORTED_MODULE_1__src__["a" /* default */]
+    'navscroll': __WEBPACK_IMPORTED_MODULE_1__src__["a" /* default */]
   },
   data() {
     return {
@@ -431,79 +431,151 @@ if (typeof window !== "undefined" && window.Vue) {
 
 let bindings = []; // store binding data
 
+let navigationItems = [];
+let navItemsClassName; // store the class name used to find the navigation items
+let observer; // mutation observer that will observe DOM changes
+let elementWrapper; // container element that wraps the navigation items
+
 function deleteBinding(el) {
-    for (let i = 0; i < bindings.length; ++i) {
-        if (bindings[i].el === el) {
-            bindings.splice(i, 1);
-            return true;
-        }
+  for (let i = 0; i < bindings.length; ++i) {
+    if (bindings[i].el === el) {
+      bindings.splice(i, 1);
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 function findBinding(el) {
-    for (let i = 0; i < bindings.length; ++i) {
-        if (bindings[i].el === el) {
-            return bindings[i];
-        }
+  for (let i = 0; i < bindings.length; ++i) {
+    if (bindings[i].el === el) {
+      return bindings[i];
     }
+  }
 }
 
 function getBinding(el) {
-    let binding = findBinding(el);
+  let binding = findBinding(el);
 
-    if (binding) {
-        return binding;
-    }
-
-    // register new binding
-    bindings.push(binding = {
-        el: el,
-        binding: {}
-    });
-
+  if (binding) {
     return binding;
+  }
+
+  // register new binding
+  bindings.push(binding = {
+    el: el,
+    binding: {}
+  });
+
+  return binding;
 }
 
 function handleClick(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const options = getBinding(this).binding.value;
-    const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
+  const options = getBinding(this).binding.value;
+  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
 
-    const clickedElement = event.currentTarget;
-    // stop propagation or not
-    const stop = options.stopPropagation === undefined ? defaultOpts.stopPropagation : options.stopPropagation;
-    // callback called when scrolling is done
-    const onDone = options.onDone && typeof options.onDone === "function" ? options.onDone : defaultOpts.onDone;
+  const clickedElement = event.currentTarget;
+  // stop propagation or not
+  const stop = options.stopPropagation === undefined ? defaultOpts.stopPropagation : options.stopPropagation;
+  // callback called when scrolling is done
+  const onDone = options.onDone && typeof options.onDone === "function" ? options.onDone : defaultOpts.onDone;
 
-    if (stop) e.stopPropagation();
+  if (stop) e.stopPropagation();
 
-    if (typeof options === "string") {
-        return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone, clickedNavItem: clickedElement /* navItems: ... */ });
+  if (typeof options === "string") {
+    return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone, clickedNavItem: clickedElement /* navItems: ... */ });
+  }
+
+  options.onDone = onDone;
+  options.clickedNavItem = clickedElement;
+  // options.navItems = ...
+  Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element, options);
+}
+
+function onBindOrUpdate(el, binding) {
+  getBinding(el).binding = binding;
+
+  const options = binding.value;
+  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
+  navItemsClassName = binding.arg;
+
+  if (navItemsClassName) {
+    // wrapper mode: the element directive is the container of the navigation items
+
+    elementWrapper = el;
+    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+    // Watch for DOM changes in the element wrapper
+    observer = new MutationObserver(initNavItems);
+    observer.observe(el, {
+      childList: true,
+      subtree: true
+    });
+    initNavItems();
+  } else {
+    // item mode: the element directive is the navigation item
+
+    if (options.clickToScroll === undefined ? options.clickToScroll : defaultOpts.clickToScroll) {
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(el, "click", handleClick);
+    } else {
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
     }
+  }
+}
 
-    options.onDone = onDone;
-    options.clickedNavItem = clickedElement;
-    // options.navItems = ...
-    Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element || hash, options);
+function initNavItems(DOMMutations) {
+  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
+  navigationItems.forEach(item => deleteBinding(item));
+  navigationItems = Array.prototype.slice.call(elementWrapper.getElementsByClassName(navItemsClassName));
+
+  const wrapperBinding = getBinding(elementWrapper).binding;
+  const options = wrapperBinding.value;
+
+  if (options.clickToScroll === undefined ? Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])().clickToScroll : options.clickToScroll) {
+    navigationItems.forEach(item => {
+      let binding = Object.assign({}, wrapperBinding);
+      binding.value = Object.assign({}, binding.value, { el: item.hash });
+      getBinding(item).binding = binding;
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(item, 'click', handleClick);
+    });
+  } else {
+    navigationItems.forEach(item => {
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
+    });
+  }
+}
+
+function onUnbind(el) {
+  let binding = getBinding(el).binding;
+  if (binding.arg) {
+    navigationItems.forEach(item => {
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
+      deleteBinding(item);
+    });
+    navigationItems = [];
+    navItemsClassName = undefined;
+    observer = undefined;
+    elementWrapper = undefined;
+  } else {
+    deleteBinding(el);
+    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
+  }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    // `binding` will be the options object for the scrollTo fn
-    bind(el, binding) {
-        getBinding(el).binding = binding;
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(el, "click", handleClick);
-    },
-    unbind(el) {
-        deleteBinding(el);
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
-    },
-    update(el, binding) {
-        getBinding(el).binding = binding;
-    },
-    scrollTo: __WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */],
-    bindings
+  // `binding.value` will be the options object for the scrollTo fn
+  bind(el, binding) {
+    onBindOrUpdate(el, binding);
+  },
+  unbind(el) {
+    onUnbind(el);
+  },
+  update(el, binding) {
+    onBindOrUpdate(el, binding);
+  },
+  scrollTo: __WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */],
+  bindings
 });
 
 /***/ }),
