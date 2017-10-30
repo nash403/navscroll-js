@@ -162,7 +162,7 @@ let defaults = {
   * @default  'scroll-item'
   * @type {String}
   */
-  itemClass: 'scroll-item',
+  itemSelector: '.scroll-item',
 };
 
 

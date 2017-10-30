@@ -1,6 +1,6 @@
 import scrollTo from "./scrollTo";
 import _ from "./utils";
-import defaults, {setDefaults} from "./default-props";
+import defaults, {setDefaults, getVueComponentProps} from "./default-props";
 
 let bindings = []; // store binding data
 
@@ -11,6 +11,19 @@ let elementWrapper; // element that wraps the navigation items
 let lastActiveItem;
 
 export default {
+  scrollTo,
+  onScroll,
+  initScrollHandler,
+  setDefaults,
+  getDefaults: defaults,
+  setNavigationItems: (el, selector) => initNavItems(null, _.$(el), selector),
+  utils: _,
+  bindings,
+  navigationItems,
+
+  /**
+   * `v-navscroll` directive definition
+   */
   // `binding.value` will be the options object for the scrollTo fn
   bind(el, binding) {
       onBindOrUpdate(el, binding)
@@ -21,15 +34,29 @@ export default {
   update(el, binding) {
     onBindOrUpdate(el, binding)
   },
-  scrollTo,
-  onScroll,
-  initScrollHandler,
-  setDefaults,
-  getDefaults: defaults,
-  initNavItems,
-  utils: _,
-  bindings,
-  navigationItems,
+
+  /**
+   * `navscroll` component definition
+   */
+  props: getVueComponentProps(),
+  template: `
+    <nav class="navscroll-js">
+      <slot></slot>
+    </nav>
+  `,
+  mounted() {
+    initObserver(this.$el, this.itemSelector, this.$props)
+    initScrollHandler();
+    onScroll();
+  },
+
+  updated() {
+    initNavItems(null, _.$(this.$el), this.itemSelector)
+  },
+
+  beforeDestroy() {
+    onUnbind(this.$el)
+  }
 };
 
 // If the `navItems` option is set it will not be taken into account
@@ -75,6 +102,45 @@ export function onScroll(event, opts) {
   if (currentItem) currentItem.classList.add(activeClass);
 }
 
+function onBindOrUpdate(el, binding) {
+  getBinding(el).binding = binding;
+
+  const options =  binding.value;
+  const defaultOpts = defaults()
+  navItemsClassName = binding.arg
+
+  if (navItemsClassName) {
+    // wrapper mode: the directive's element is an ancestor of the navigation items
+
+    navItemsClassName = `.${navItemsClassName}` // prefix with a dot to create a selector
+    initObserver(el, navItemsClassName)
+  } else {
+    // item mode: the element directive is the navigation item
+
+    if (options.clickToScroll === undefined ? options.clickToScroll : defaultOpts.clickToScroll) {
+      _.on(el, "click", handleClick);
+    } else {
+      _.off(el, "click", handleClick);
+    }
+  }
+}
+
+function initObserver(container, selector, options) {
+
+  elementWrapper = container
+  let binding = getBinding(elementWrapper).binding
+  !binding.arg && (binding.arg = selector)
+  options && (binding.value = Object.assign({}, options))
+  const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+  // Watch for DOM changes in the element wrapper
+  observer = new MutationObserver(initNavItems);
+  observer.observe(container, {
+      childList: true,
+      subtree: true
+  });
+  initNavItems(null, container, selector);
+}
+
 function initScrollHandler(options) {
   if (!options) options = getBinding(elementWrapper).binding.value
   let container = _.$(options.container || defaultOpts.container);
@@ -87,38 +153,7 @@ function initScrollHandler(options) {
   _.on(container, 'scroll', onScroll, { passive : true })
 }
 
-function onBindOrUpdate(el, binding) {
-  getBinding(el).binding = binding;
-
-  const options =  binding.value;
-  const defaultOpts = defaults()
-  navItemsClassName = binding.arg
-
-  if (navItemsClassName) {
-    // wrapper mode: the directive's element is an ancestor of the navigation items
-
-    elementWrapper = el
-    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-    // Watch for DOM changes in the element wrapper
-    observer = new MutationObserver(initNavItems);
-    observer.observe(el, {
-        childList: true,
-        subtree: true
-    });
-    initNavItems(null, el, navItemsClassName);
-
-  } else {
-    // item mode: the element directive is the navigation item
-
-    if (options.clickToScroll === undefined ? options.clickToScroll : defaultOpts.clickToScroll) {
-      _.on(el, "click", handleClick);
-    } else {
-      _.off(el, "click", handleClick);
-    }
-  }
-}
-
-function initNavItems(DOMMutations, el, itemsClassName) {
+function initNavItems(DOMMutations, el, selector) {
   // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
 
   // see https://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
@@ -132,24 +167,23 @@ function initNavItems(DOMMutations, el, itemsClassName) {
   if (!isElement(el)) el = null
 
   let wrapper = _.$(el || elementWrapper)
-  let className = itemsClassName || navItemsClassName
+  let className = selector || navItemsClassName
 
   if (!wrapper) return ;
 
   navigationItems.forEach(item => deleteBinding(item))
-  navigationItems = Array.prototype.slice.call(wrapper.getElementsByClassName(className));
+  navigationItems = Array.prototype.slice.call(wrapper.querySelectorAll(className));
 
   const wrapperBinding = getBinding(wrapper).binding;
   const options = wrapperBinding.value;
 
   if (options.clickToScroll === undefined ? defaults().clickToScroll : options.clickToScroll) {
-    navigationItems.forEach((item) => {
+    return navigationItems.forEach((item) => {
       let binding = Object.assign({}, wrapperBinding)
       binding.value = Object.assign({}, binding.value, {el: item.hash})
       getBinding(item).binding = binding
       _.on(item, 'click', handleClick);
     });
-    return ;
   }
   navigationItems.forEach((item) => {
     _.off(item, 'click', handleClick);
