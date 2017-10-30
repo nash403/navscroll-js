@@ -28,13 +28,29 @@ let defaults = {
   */
   easing: "ease",
   /**
-  * Amount of space between top of screen and the section to
+  * Amount of space between top / left side of screen and the section to
   * highlight.
   *
   * @default 0
   * @type {Number}
   */
   offset: 0,
+  /**
+  * Threshold amount of space between left side of screen and the section to
+  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  *
+  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetX: undefined,
+  /**
+  * Threshold amount of space between top side of screen and the section to
+  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  *
+  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetY: undefined,
   /**
   * Allow the scroll animation to be cancelled.
   * In that case, events like 'keyup' or 'touchmove' will cancel the animation
@@ -124,23 +140,15 @@ let defaults = {
   * Defines whether to track section changes when
   * clicking an item to scroll to its section. If set to true,
   * the scrolling listener will always keep track and change the active class
-  * to the current section while scrolling, if false, the scrolling handler provided
-  * with the `trackingFn` option will be removed temporarily from the scrolling container
-  * and the active class will be immediately applied to the clicked menu item, ignoring
-  * the passed sections until the scrolling is over.
+  * to the current section while scrolling, if false, the scrolling handler will be
+  * removed temporarily from the scrolling container and the active class will be
+  * immediately applied to the clicked menu item, ignoring the passed sections
+  * until the scrolling is over.
   *
   * @default false
   * @type {Boolean}
   */
   alwaysTrack: false,
-  /**
-  * Scrolling listener on the container that should be removed when
-  * the `alwaysTrack` option is set to false.
-  *
-  * @default null
-  * @type {Function}
-  */
-  trackingFn: null,
   /**
   * Class that will be applied in the menu item.
   *

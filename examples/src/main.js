@@ -15,6 +15,7 @@ new Vue({
   },
   mounted() {
     this.$refs.entries[0].classList.add(this.activeClass)
+    NavScroll.initScrollHandler()
   },
   methods: {
     resetActiveClass (entryIndex) {

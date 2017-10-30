@@ -1,6 +1,6 @@
 import BezierEasing from "bezier-easing";
 import _ from "./utils";
-import defaults, { setDefaults } from "./default-props";
+import defaults from "./default-props";
 
 const abortEvents = [ // Events that can cancel the scrollTo fn
     "mousedown",
@@ -114,10 +114,13 @@ const scroller = () => {
         if (alwaysTrack && !trackingFn) {
           updateClassName(clickedNavItem, navItems)
         }
-        _.on(container, 'scroll', trackingFn, { passive: true })
-        _.off(container, abortEvents, abortFn);
         if (abort && onCancel) onCancel(abortEv);
         if (!abort && onDone) onDone();
+        _.off(container, abortEvents, abortFn);
+        setTimeout(() => {
+          // workaround to avoid the tracking function to be called right after we re-added it to the container
+          _.on(container, 'scroll', trackingFn, { passive: true })
+        }, 100)
     }
 
     function topLeft(element, top, left) {
@@ -171,7 +174,7 @@ const scroller = () => {
         y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
         activeClass = (options.activeClass === undefined) ? defaultOpts.activeClass : options.activeClass;
         clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem;
-        hash = clickedNavItem ? clickedNavItem.hash : options.hash || defaultOpts.hash;
+        hash = clickedNavItem ? clickedNavItem.hash || clickedNavItem.dataset.href : options.hash || defaultOpts.hash;
         anchor = (options.anchor === undefined) ? defaultOpts.anchor : options.anchor;
         navItems = options.navItems || defaultOpts.navItems;
         alwaysTrack = (options.alwaysTrack === undefined) ? defaultOpts.alwaysTrack : options.alwaysTrack;
