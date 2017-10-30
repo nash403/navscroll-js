@@ -10,66 +10,27 @@ let observer; // mutation observer that will observe DOM changes
 let elementWrapper; // element that wraps the navigation items
 let lastActiveItem;
 
-function deleteBinding(el) {
-    for (let i = 0; i < bindings.length; ++i) {
-        if (bindings[i].el === el) {
-            bindings.splice(i, 1);
-            return true;
-        }
-    }
-    return false;
-}
-
-function findBinding(el) {
-    for (let i = 0; i < bindings.length; ++i) {
-        if (bindings[i].el === el) {
-            return bindings[i];
-        }
-    }
-}
-
-function getBinding(el) {
-    let binding = findBinding(el);
-
-    if (binding) {
-        return binding;
-    }
-
-    // register new binding
-    bindings.push(
-        binding = {
-            el: el,
-            binding: {}
-        }
-    );
-
-    return binding;
-}
-
-function handleClick(e) {
-    e.preventDefault();
-
-    const options = getBinding(this).binding.value;
-    const defaultOpts = defaults()
-
-    const clickedElement = event.currentTarget;
-    // stop propagation or not
-    const stop = (options.stopPropagation === undefined) ? defaultOpts.stopPropagation : options.stopPropagation;
-    // callback called when scrolling is done
-    const onDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : defaultOpts.onDone
-
-    if (stop) e.stopPropagation()
-
-    if (typeof options === "string") {
-      return scrollTo(options, {onDone, clickedNavItem: clickedElement, navItems: navigationItems });
-    }
-
-    options.onDone = onDone
-    options.clickedNavItem = clickedElement
-    options.navItems = navigationItems
-    options.trackingFn = onScroll
-    scrollTo(options.el || options.element, options);
-}
+export default {
+  // `binding.value` will be the options object for the scrollTo fn
+  bind(el, binding) {
+      onBindOrUpdate(el, binding)
+  },
+  unbind(el) {
+      onUnbind(el)
+  },
+  update(el, binding) {
+    onBindOrUpdate(el, binding)
+  },
+  scrollTo,
+  onScroll,
+  initScrollHandler,
+  setDefaults,
+  getDefaults: defaults,
+  initNavItems,
+  utils: _,
+  bindings,
+  navigationItems,
+};
 
 // If the `navItems` option is set it will not be taken into account
 // The `navigationItems` variable has to be set prior to a call to onScroll
@@ -114,32 +75,6 @@ export function onScroll(event, opts) {
   if (currentItem) currentItem.classList.add(activeClass);
 }
 
-function initNavItems(DOMMutations, el, itemsClassName) {
-  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
-
-  let wrapper = _.$(el || elementWrapper)
-  let className = itemsClassName || navItemsClassName
-
-  navigationItems.forEach(item => deleteBinding(item))
-  navigationItems = Array.prototype.slice.call(wrapper.getElementsByClassName(className));
-
-  const wrapperBinding = getBinding(wrapper).binding; // if el is set, its binding shall exist
-  const options = wrapperBinding.value;
-
-  if (options.clickToScroll === undefined ? defaults().clickToScroll : options.clickToScroll) {
-    navigationItems.forEach((item) => {
-      let binding = Object.assign({}, wrapperBinding)
-      binding.value = Object.assign({}, binding.value, {el: item.hash})
-      getBinding(item).binding = binding
-      _.on(item, 'click', handleClick);
-    });
-    return ;
-  }
-  navigationItems.forEach((item) => {
-    _.off(item, 'click', handleClick);
-  });
-}
-
 function initScrollHandler(options) {
   if (!options) options = getBinding(elementWrapper).binding.value
   let container = _.$(options.container || defaultOpts.container);
@@ -148,6 +83,7 @@ function initScrollHandler(options) {
       `[navscroll-js]: Could not attach scroll handler to the container "${options.container || defaultOpts.container}" because it was not found in the DOM. Make sure it is in the DOM and then attach the \`onScroll\` handler yourself to it.`
     );
   }
+  getBinding(container).binding.value = options
   _.on(container, 'scroll', onScroll, { passive : true })
 }
 
@@ -182,6 +118,44 @@ function onBindOrUpdate(el, binding) {
   }
 }
 
+function initNavItems(DOMMutations, el, itemsClassName) {
+  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
+
+  // see https://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
+  function isElement(o){
+    return (
+      typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+      o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+    );
+  }
+
+  if (!isElement(el)) el = null
+
+  let wrapper = _.$(el || elementWrapper)
+  let className = itemsClassName || navItemsClassName
+
+  if (!wrapper) return ;
+
+  navigationItems.forEach(item => deleteBinding(item))
+  navigationItems = Array.prototype.slice.call(wrapper.getElementsByClassName(className));
+
+  const wrapperBinding = getBinding(wrapper).binding;
+  const options = wrapperBinding.value;
+
+  if (options.clickToScroll === undefined ? defaults().clickToScroll : options.clickToScroll) {
+    navigationItems.forEach((item) => {
+      let binding = Object.assign({}, wrapperBinding)
+      binding.value = Object.assign({}, binding.value, {el: item.hash})
+      getBinding(item).binding = binding
+      _.on(item, 'click', handleClick);
+    });
+    return ;
+  }
+  navigationItems.forEach((item) => {
+    _.off(item, 'click', handleClick);
+  });
+}
+
 function onUnbind(el) {
   let binding = getBinding(el).binding
   if (binding.arg) {
@@ -202,24 +176,61 @@ function onUnbind(el) {
   }
 }
 
-export default {
-    // `binding.value` will be the options object for the scrollTo fn
-    bind(el, binding) {
-        onBindOrUpdate(el, binding)
-    },
-    unbind(el) {
-        onUnbind(el)
-    },
-    update(el, binding) {
-      onBindOrUpdate(el, binding)
-    },
-    utils: _,
-    getDefaults: defaults,
-    setDefaults,
-    scrollTo,
-    initScrollHandler,
-    onScroll,
-    bindings,
-    navigationItems,
-    initNavItems
-};
+function handleClick(e) {
+  e.preventDefault();
+
+  const options = getBinding(this).binding.value;
+  const defaultOpts = defaults()
+
+  const clickedElement = event.currentTarget;
+  const stop = (options.stopPropagation === undefined) ? defaultOpts.stopPropagation : options.stopPropagation;
+  const onDone = (options.onDone && typeof options.onDone === "function") ? options.onDone : defaultOpts.onDone
+
+  if (stop) e.stopPropagation()
+
+  if (typeof options === "string") {
+    return scrollTo(options, {onDone, clickedNavItem: clickedElement, navItems: navigationItems });
+  }
+
+  options.onDone = onDone
+  options.clickedNavItem = clickedElement
+  options.navItems = navigationItems
+  options.trackingFn = onScroll
+  scrollTo(options.el || options.element, options);
+}
+
+function getBinding(el) {
+  let binding = findBinding(el);
+
+  if (binding) {
+      return binding;
+  }
+
+  // register new binding
+  bindings.push(
+      binding = {
+          el: el,
+          binding: {}
+      }
+  );
+
+  return binding;
+}
+
+function findBinding(el) {
+  for (let i = 0; i < bindings.length; ++i) {
+      if (bindings[i].el === el) {
+          return bindings[i];
+      }
+  }
+}
+
+function deleteBinding(el) {
+    for (let i = 0; i < bindings.length; ++i) {
+        if (bindings[i].el === el) {
+            bindings.splice(i, 1);
+            return true;
+        }
+    }
+    return false;
+}

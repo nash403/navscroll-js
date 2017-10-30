@@ -60,313 +60,26 @@
 /******/ 	__webpack_require__.p = "/examples/assets/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getDefaults;
-/* unused harmony export _getVueComponentProps */
-let defaults = {
-  /**
-  * The scrollable container.
-  * It can be a selector string or the HTML element itself
-  *
-  * @default 'body'
-  * @type {String|HTMLElement}
-  */
-  container: 'body',
-  /**
-  * The duration of the scroll animation
-  *
-  * @default 600
-  * @type {Number}
-  */
-  duration: 600,
-  /**
-  * Your custom easing value for the click to scroll functionality.
-  * It must be:
-  * - a string with 4 values separated by commas in a cubic bezier format.
-  * - a string value among one of the following values:
-  *       'ease', 'linear', 'ease-in', 'ease-out' or 'ease-in-out'
-  * - an array of 4 values in a cubic bezier format
-  *
-  * @example ".5,0,.35,1"
-  * @default 'ease'
-  * @type {String|Array}
-  */
-  easing: "ease",
-  /**
-  * Amount of space between top / left side of screen and the section to
-  * highlight.
-  *
-  * @default 0
-  * @type {Number}
-  */
-  offset: 0,
-  /**
-  * Threshold amount of space between left side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
-  *
-  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
-  * @type {Number}
-  */
-  onScrollOffsetX: undefined,
-  /**
-  * Threshold amount of space between top side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
-  *
-  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
-  * @type {Number}
-  */
-  onScrollOffsetY: undefined,
-  /**
-  * Allow the scroll animation to be cancelled.
-  * In that case, events like 'keyup' or 'touchmove' will cancel the animation
-  * and scroll the content immediately to the target.
-  *
-  * @default 0
-  * @type {Boolean}
-  */
-  cancelable: true,
-  /**
-  * Callback called when scrolling is finished.
-  * Also called when the scroll animation is cancelled.
-  *
-  * @default null
-  * @type {Function}
-  */
-  onDone: null,
-  /**
-  * Callback called when the scroll animation is cancelled.
-  *
-  * @default null
-  * @type {Function}
-  */
-  onCancel: null,
-  /**
-  * Whether to stop the propagation of the click event on a menu item
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  stopPropagation: true,
-  /**
-  * Whether to update window.location.hash when a link menu item with a href is clicked
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  anchor: true,
-  /**
-  * Hash of the target section.
-  * It will be applyed to window.location.hash if the `anchor` option is set to true.
-  * If the `clickedNavItem` option is set and the element has a hash it will have priority
-  * to this option.
-  *
-  * @default null
-  * @type {String}
-  */
-  hash: null,
-  /**
-  * Whether to scroll on the X axis
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  scrollX: false,
-  /**
-  * Whether to scroll on the Y axis
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  scrollY: true,
-  /**
-  * Enables/disables the scrolling when clicking in a menu item.
-  * Disable if you'd like to handle the scrolling by your own.
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  clickToScroll: true,
-  /**
-  * The reference to the navigation element that was clicked to trigger the scroll.
-  *
-  * @default null
-  * @type {HTMLElement}
-  */
-  clickedNavItem: null,
-  /**
-  * An array of navigation elements that can be clicked to trigger
-  * a scroll to their target section.
-  *
-  * @default []
-  * @type {Array<HTMLElement>}
-  */
-  navItems: [],
-  /**
-  * Defines whether to track section changes when
-  * clicking an item to scroll to its section. If set to true,
-  * the scrolling listener will always keep track and change the active class
-  * to the current section while scrolling, if false, the scrolling handler will be
-  * removed temporarily from the scrolling container and the active class will be
-  * immediately applied to the clicked menu item, ignoring the passed sections
-  * until the scrolling is over.
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  alwaysTrack: false,
-  /**
-  * Class that will be applied in the menu item.
-  *
-  * @default  'active'
-  * @type {String}
-  */
-  activeClass: 'active',
-  /**
-  * Class that will be used to recognize the click-to-scroll navigation items
-  *
-  * @default  'scroll-item'
-  * @type {String}
-  */
-  itemClass: 'scroll-item'
-};
+module.exports = __webpack_require__(1);
 
-const setDefaults = options => defaults = Object.assign({}, defaults, options);
-/* harmony export (immutable) */ __webpack_exports__["b"] = setDefaults;
-
-
-function getDefaults(options) {
-  return defaults;
-}
-
-const getVueComponentProps = params => params ? _getVueComponentProps(params) : _getVueComponentProps(defaults);
-/* unused harmony export getVueComponentProps */
-
-
-function _getVueComponentProps(params) {
-  let props = {};
-  for (let prop in params) {
-    let type = getType(params[prop]);
-    props[prop] = {
-      type,
-      default: type === Array || type === Object ? () => params[prop] : params[prop]
-    };
-  }
-  return props;
-}
-
-function getType(value) {
-  const type = obj => Object.prototype.toString.call(obj).slice(8, -1);
-
-  switch (type(value)) {
-    case 'Object':
-      return Object;
-    case 'Array':
-      return Array;
-    case 'String':
-      return String;
-    case 'Number':
-      return Number;
-    case 'Boolean':
-      return Boolean;
-    case 'RegExp':
-      return RegExp;
-    case 'Undefined':
-    case 'Null':
-    default:
-      return null;
-  }
-}
 
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__default_easings__ = __webpack_require__(9);
-
-
-// https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
-let supportsPassive = false;
-try {
-    let opts = Object.defineProperty({}, "passive", {
-        get: function get() {
-            supportsPassive = true;
-        }
-    });
-    window.addEventListener("test", null, opts);
-} catch (e) {}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    $(selector) {
-        if (typeof selector !== "string") {
-            return selector;
-        }
-        return document.querySelector(selector);
-    },
-    on(element, events, handler, opts = { passive: false }) {
-        if (!(events instanceof Array)) {
-            events = [events];
-        }
-        for (let i = 0; i < events.length; i++) {
-            element.addEventListener(events[i], handler, supportsPassive ? opts : false);
-        }
-    },
-    off(element, events, handler) {
-        if (!(events instanceof Array)) {
-            events = [events];
-        }
-        for (let i = 0; i < events.length; i++) {
-            element.removeEventListener(events[i], handler);
-        }
-    },
-    cumulativeOffset(element) {
-        let top = 0;
-        let left = 0;
-
-        do {
-            top += element.offsetTop || 0;
-            left += element.offsetLeft || 0;
-            element = element.offsetParent;
-        } while (element);
-
-        return {
-            top: top,
-            left: left
-        };
-    },
-    cubicBezierArrayFrom(easing) {
-        if (Array.isArray(easing)) return easing;
-        if (typeof easing === "string") {
-            if (__WEBPACK_IMPORTED_MODULE_0__default_easings__["a" /* default */][easing]) return __WEBPACK_IMPORTED_MODULE_0__default_easings__["a" /* default */][easing];
-            return easing.split(',');
-        }
-        return __WEBPACK_IMPORTED_MODULE_0__default_easings__["a" /* default */]['ease'];
-    }
-});
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3);
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__main_scss__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dist_navscroll__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll__);
 
 
 
@@ -374,7 +87,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 new Vue({
   el: '#app',
   directives: {
-    'navscroll': __WEBPACK_IMPORTED_MODULE_1__src__["a" /* default */]
+    'navscroll': __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a
   },
   data() {
     return {
@@ -384,7 +97,7 @@ new Vue({
   },
   mounted() {
     this.$refs.entries[0].classList.add(this.activeClass);
-    __WEBPACK_IMPORTED_MODULE_1__src__["a" /* default */].initScrollHandler();
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initScrollHandler();
   },
   methods: {
     resetActiveClass(entryIndex) {
@@ -394,605 +107,221 @@ new Vue({
 });
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__navscroll__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__default_props__ = __webpack_require__(0);
-
-
-
-const install = function install(Vue, options) {
-    if (options) setDefaults(options);
-    Vue.directive("scroll-to", __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */]);
-    Vue.prototype.$scrollTo = __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].scrollTo;
-};
-
-__WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].install = install;
-
-if (typeof window !== "undefined" && window.Vue) {
-    window.NavScroll = __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */];
-    Vue.use(install);
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */]);
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export onScroll */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scrollTo__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_props__ = __webpack_require__(0);
-
-
-
-
-let bindings = []; // store binding data
-
-let navigationItems = [];
-let navItemsClassName; // store the class name used to find the navigation items
-let observer; // mutation observer that will observe DOM changes
-let elementWrapper; // element that wraps the navigation items
-let lastActiveItem;
-
-function deleteBinding(el) {
-  for (let i = 0; i < bindings.length; ++i) {
-    if (bindings[i].el === el) {
-      bindings.splice(i, 1);
-      return true;
-    }
-  }
-  return false;
-}
-
-function findBinding(el) {
-  for (let i = 0; i < bindings.length; ++i) {
-    if (bindings[i].el === el) {
-      return bindings[i];
-    }
-  }
-}
-
-function getBinding(el) {
-  let binding = findBinding(el);
-
-  if (binding) {
-    return binding;
-  }
-
-  // register new binding
-  bindings.push(binding = {
-    el: el,
-    binding: {}
-  });
-
-  return binding;
-}
-
-function handleClick(e) {
-  e.preventDefault();
-
-  const options = getBinding(this).binding.value;
-  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
-
-  const clickedElement = event.currentTarget;
-  // stop propagation or not
-  const stop = options.stopPropagation === undefined ? defaultOpts.stopPropagation : options.stopPropagation;
-  // callback called when scrolling is done
-  const onDone = options.onDone && typeof options.onDone === "function" ? options.onDone : defaultOpts.onDone;
-
-  if (stop) e.stopPropagation();
-
-  if (typeof options === "string") {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone, clickedNavItem: clickedElement, navItems: navigationItems });
-  }
-
-  options.onDone = onDone;
-  options.clickedNavItem = clickedElement;
-  options.navItems = navigationItems;
-  options.trackingFn = onScroll;
-  Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element, options);
-}
-
-// If the `navItems` option is set it will not be taken into account
-// The `navigationItems` variable has to be set prior to a call to onScroll
-function onScroll(event, opts) {
-  let currentItem;
-
-  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
-  const options = opts || getBinding(elementWrapper).binding.value;
-
-  let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(options.container || defaultOpts.container);
-  let offsetY = options.onScrollOffsetY || Math.round((window.innerHeight || document.documentElement.clientHeight) / 3) * 2;
-  let offsetX = options.onScrollOffsetX || Math.round((window.innerWidth || document.documentElement.clientWidth) / 3) * 2;
-  let activeClass = options.activeClass === undefined ? defaultOpts.activeClass : options.activeClass;
-  let x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
-  let y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
-
-  if (!container) return;
-
-  navigationItems.forEach(item => {
-    item.classList.remove(activeClass);
-
-    const targetDiscriminator = item.hash ? item.hash.substr(1) : item.dataset.href;
-    const targetElement = document.getElementById(targetDiscriminator);
-    if (!targetElement) {
-      // Return silently if target is not present to avoid polluting the console with warnings
-      return;
-    }
-
-    let cumulativeOffset = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].cumulativeOffset(targetElement);
-    if (y && container.scrollTop >= cumulativeOffset.top - offsetY) {
-      currentItem = item;
-    }
-    if (x && container.scrollLeft >= cumulativeOffset.left - offsetX) {
-      currentItem = item;
-    }
-  });
-
-  if (currentItem !== lastActiveItem) {
-    lastActiveItem = currentItem;
-  }
-
-  if (currentItem) currentItem.classList.add(activeClass);
-}
-
-function initNavItems(DOMMutations, el, itemsClassName) {
-  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
-
-  let wrapper = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(el || elementWrapper);
-  let className = itemsClassName || navItemsClassName;
-
-  navigationItems.forEach(item => deleteBinding(item));
-  navigationItems = Array.prototype.slice.call(wrapper.getElementsByClassName(className));
-
-  const wrapperBinding = getBinding(wrapper).binding; // if el is set, its binding shall exist
-  const options = wrapperBinding.value;
-
-  if (options.clickToScroll === undefined ? Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])().clickToScroll : options.clickToScroll) {
-    navigationItems.forEach(item => {
-      let binding = Object.assign({}, wrapperBinding);
-      binding.value = Object.assign({}, binding.value, { el: item.hash });
-      getBinding(item).binding = binding;
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(item, 'click', handleClick);
-    });
-    return;
-  }
-  navigationItems.forEach(item => {
-    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
-  });
-}
-
-function initScrollHandler(options) {
-  if (!options) options = getBinding(elementWrapper).binding.value;
-  let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(options.container || defaultOpts.container);
-  if (!container) {
-    return console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${options.container || defaultOpts.container}" because it was not found in the DOM. Make sure it is in the DOM and then attach the \`onScroll\` handler yourself to it.`);
-  }
-  __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, 'scroll', onScroll, { passive: true });
-}
-
-function onBindOrUpdate(el, binding) {
-  getBinding(el).binding = binding;
-
-  const options = binding.value;
-  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
-  navItemsClassName = binding.arg;
-
-  if (navItemsClassName) {
-    // wrapper mode: the directive's element is an ancestor of the navigation items
-
-    elementWrapper = el;
-    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-    // Watch for DOM changes in the element wrapper
-    observer = new MutationObserver(initNavItems);
-    observer.observe(el, {
-      childList: true,
-      subtree: true
-    });
-    initNavItems(null, el, navItemsClassName);
-  } else {
-    // item mode: the element directive is the navigation item
-
-    if (options.clickToScroll === undefined ? options.clickToScroll : defaultOpts.clickToScroll) {
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(el, "click", handleClick);
-    } else {
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
-    }
-  }
-}
-
-function onUnbind(el) {
-  let binding = getBinding(el).binding;
-  if (binding.arg) {
-    navigationItems.forEach(item => {
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
-      deleteBinding(item);
-    });
-    navigationItems = [];
-    navItemsClassName = undefined;
-    observer = undefined;
-    elementWrapper = undefined;
-    let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(binding.value.container || defaultOpts.container);
-    if (!container) return;
-    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, 'scroll', onScroll);
-  } else {
-    deleteBinding(el);
-    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
-  }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  // `binding.value` will be the options object for the scrollTo fn
-  bind(el, binding) {
-    onBindOrUpdate(el, binding);
-  },
-  unbind(el) {
-    onUnbind(el);
-  },
-  update(el, binding) {
-    onBindOrUpdate(el, binding);
-  },
-  utils: __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */],
-  getDefaults: __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */],
-  setDefaults: __WEBPACK_IMPORTED_MODULE_2__default_props__["b" /* setDefaults */],
-  scrollTo: __WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */],
-  initScrollHandler,
-  onScroll,
-  bindings,
-  navigationItems,
-  initNavItems
-});
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export setLocationHash */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_bezier_easing__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_bezier_easing___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_bezier_easing__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_props__ = __webpack_require__(0);
-
-
-
-
-const abortEvents = [// Events that can cancel the scrollTo fn
-"mousedown", "wheel", "DOMMouseScroll", "mousewheel", "keyup", "touchmove"];
-
-function setLocationHash(hash) {
-    if (!hash) return;
-    if (window.history.pushState) {
-        window.history.pushState(null, null, hash);
-    } else {
-        window.location.hash = hash;
-    }
-}
-
-const scroller = () => {
-    let targetElement; // element to scroll to
-    let container; // container to scroll
-    let duration; // duration of the scrolling
-    let easing; // easing to be used when scrolling
-    let offset; // offset to be added (subtracted)
-    let cancelable; // indicates if user can cancel the scroll or not.
-    let onDone; // callback when scrolling is done
-    let onCancel; // callback when scrolling is canceled / aborted
-    let x; // scroll on x axis
-    let y; // scroll on y axis
-    let activeClass; // class of the current navigation item
-    let clickedNavItem; // the navigation item that triggered the scrollTo
-    let hash; // hash of the clicked item if it is a link
-    let anchor; // whether to update the window.location.hash or not
-    let navItems; // the navigation items array including the clicked one
-    let alwaysTrack; // whether to keep listening to the scroll event on the container
-    let trackingFn; // the scroll event listener on the container
-
-    let initialX; // initial X of container
-    let targetX; // target X of container
-    let initialY; // initial Y of container
-    let targetY; // target Y of container
-    let diffX; // difference
-    let diffY; // difference
-
-    let abort; // is scrolling aborted
-
-    let abortEv; // event that aborted scrolling
-    let abortFn = e => {
-        if (!cancelable) return;
-        abortEv = e;
-        abort = true;
-    };
-    let easingFn;
-
-    let timeStart; // time when scrolling started
-    let timeElapsed; // time elapsed since scrolling started
-
-    let progress; // progress
-
-    function scrollTop(container) {
-        let scrollTop = container.scrollTop;
-
-        if (container.tagName.toLowerCase() === "body") {
-            // in firefox body.scrollTop always returns 0
-            // thus if we are trying to get scrollTop on a body tag
-            // we need to get it from the documentElement
-            scrollTop = scrollTop || document.documentElement.scrollTop;
-        }
-
-        return scrollTop;
-    }
-
-    function scrollLeft(container) {
-        let scrollLeft = container.scrollLeft;
-
-        if (container.tagName.toLowerCase() === "body") {
-            // in firefox body.scrollLeft always returns 0
-            // thus if we are trying to get scrollLeft on a body tag
-            // we need to get it from the documentElement
-            scrollLeft = scrollLeft || document.documentElement.scrollLeft;
-        }
-
-        return scrollLeft;
-    }
-
-    function step(timestamp) {
-        if (abort) return done();
-        if (!timeStart) timeStart = timestamp;
-
-        timeElapsed = timestamp - timeStart;
-
-        progress = Math.min(timeElapsed / duration, 1);
-        progress = easingFn(progress);
-
-        topLeft(container, initialY + diffY * progress, initialX + diffX * progress);
-
-        timeElapsed < duration ? window.AFRequestID = window.requestAnimationFrame(step) : done();
-    }
-
-    function done() {
-        if (!abort) topLeft(container, targetY, targetX);
-        timeStart = false;
-
-        anchor && setLocationHash(hash);
-        if (alwaysTrack && !trackingFn) {
-            updateClassName(clickedNavItem, navItems);
-        }
-        if (abort && onCancel) onCancel(abortEv);
-        if (!abort && onDone) onDone();
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, abortEvents, abortFn);
-        setTimeout(() => {
-            // workaround to avoid the tracking function to be called right after we re-added it to the container
-            __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, 'scroll', trackingFn, { passive: true });
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function (e, t) {
+   true ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.NavScroll = t() : e.NavScroll = t();
+}(this, function () {
+  return function (e) {
+    function t(o) {
+      if (n[o]) return n[o].exports;var r = n[o] = { i: o, l: !1, exports: {} };return e[o].call(r.exports, r, r.exports, t), r.l = !0, r.exports;
+    }var n = {};return t.m = e, t.c = n, t.d = function (e, n, o) {
+      t.o(e, n) || Object.defineProperty(e, n, { configurable: !1, enumerable: !0, get: o });
+    }, t.n = function (e) {
+      var n = e && e.__esModule ? function () {
+        return e.default;
+      } : function () {
+        return e;
+      };return t.d(n, "a", n), n;
+    }, t.o = function (e, t) {
+      return Object.prototype.hasOwnProperty.call(e, t);
+    }, t.p = "/", t(t.s = 2);
+  }([function (e, t, n) {
+    "use strict";
+    t.a = function (e) {
+      return o;
+    };let o = { container: "body", duration: 600, easing: "ease", offset: 0, onScrollOffsetX: void 0, onScrollOffsetY: void 0, cancelable: !0, onDone: null, onCancel: null, stopPropagation: !0, anchor: !0, hash: null, scrollX: !1, scrollY: !0, clickToScroll: !0, clickedNavItem: null, navItems: [], alwaysTrack: !1, activeClass: "active", itemClass: "scroll-item" };t.b = e => o = Object.assign({}, o, e);
+  }, function (e, t, n) {
+    "use strict";
+    var o = n(6);let r = !1;try {
+      let e = Object.defineProperty({}, "passive", { get: function get() {
+          r = !0;
+        } });window.addEventListener("test", null, e);
+    } catch (e) {}t.a = { $: e => "string" != typeof e ? e : document.querySelector(e), on(e, t, n, o = { passive: !1 }) {
+        t instanceof Array || (t = [t]);for (let a = 0; a < t.length; a++) e.addEventListener(t[a], n, !!r && o);
+      }, off(e, t, n) {
+        t instanceof Array || (t = [t]);for (let o = 0; o < t.length; o++) e.removeEventListener(t[o], n);
+      }, cumulativeOffset(e) {
+        let t = 0,
+            n = 0;do {
+          t += e.offsetTop || 0, n += e.offsetLeft || 0, e = e.offsetParent;
+        } while (e);return { top: t, left: n };
+      }, cubicBezierArrayFrom: e => Array.isArray(e) ? e : "string" == typeof e ? o.a[e] ? o.a[e] : e.split(",") : o.a.ease };
+  }, function (e, t, n) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", { value: !0 });var o = n(3),
+        r = n(0);const a = function a(e, t) {
+      t && Object(r.b)(t), e.directive("navscroll", o.a), e.prototype.$scrollTo = o.a.scrollTo;
+    };o.a.install = a, "undefined" != typeof window && window.Vue && (window.NavScroll = o.a, Vue.use(a)), t.default = o.a;
+  }, function (e, t, n) {
+    "use strict";
+    function o(e) {
+      for (let t = 0; t < w.length; ++t) if (w[t].el === e) return w.splice(t, 1), !0;return !1;
+    }function r(e) {
+      for (let t = 0; t < w.length; ++t) if (w[t].el === e) return w[t];
+    }function a(e) {
+      let t = r(e);return t || (w.push(t = { el: e, binding: {} }), t);
+    }function l(e) {
+      e.preventDefault();const t = a(this).binding.value,
+            n = Object(v.a)(),
+            o = event.currentTarget,
+            r = void 0 === t.stopPropagation ? n.stopPropagation : t.stopPropagation,
+            l = t.onDone && "function" == typeof t.onDone ? t.onDone : n.onDone;if (r && e.stopPropagation(), "string" == typeof t) return Object(f.a)(t, { onDone: l, clickedNavItem: o, navItems: g });t.onDone = l, t.clickedNavItem = o, t.navItems = g, t.trackingFn = i, Object(f.a)(t.el || t.element, t);
+    }function i(e, t) {
+      let n;const o = Object(v.a)(),
+            r = t || a(m).binding.value;let l = d.a.$(r.container || o.container),
+          i = r.onScrollOffsetY || 2 * Math.round((window.innerHeight || document.documentElement.clientHeight) / 3),
+          c = r.onScrollOffsetX || 2 * Math.round((window.innerWidth || document.documentElement.clientWidth) / 3),
+          s = void 0 === r.activeClass ? o.activeClass : r.activeClass,
+          u = void 0 === r.scrollX ? o.scrollX : r.scrollX,
+          f = void 0 === r.scrollY ? o.scrollY : r.scrollY;l && (g.forEach(e => {
+        e.classList.remove(s);const t = e.hash ? e.hash.substr(1) : e.dataset.href,
+              o = document.getElementById(t);if (!o) return;let r = d.a.cumulativeOffset(o);f && l.scrollTop >= r.top - i && (n = e), u && l.scrollLeft >= r.left - c && (n = e);
+      }), n !== b && (b = n), n && n.classList.add(s));
+    }function c(e, t, n) {
+      let r = d.a.$(t || m),
+          i = n || p;g.forEach(e => o(e)), g = Array.prototype.slice.call(r.getElementsByClassName(i));const c = a(r).binding,
+            s = c.value;(void 0 === s.clickToScroll ? Object(v.a)().clickToScroll : s.clickToScroll) ? g.forEach(e => {
+        let t = Object.assign({}, c);t.value = Object.assign({}, t.value, { el: e.hash }), a(e).binding = t, d.a.on(e, "click", l);
+      }) : g.forEach(e => {
+        d.a.off(e, "click", l);
+      });
+    }function s(e, t) {
+      a(e).binding = t;const n = t.value,
+            o = Object(v.a)();if (p = t.arg) {
+        m = e;const t = window.MutationObserver || window.WebKitMutationObserver;(h = new t(c)).observe(e, { childList: !0, subtree: !0 }), c(null, e, p);
+      } else (void 0 === n.clickToScroll ? n.clickToScroll : o.clickToScroll) ? d.a.on(e, "click", l) : d.a.off(e, "click", l);
+    }function u(e) {
+      let t = a(e).binding;if (t.arg) {
+        g.forEach(e => {
+          d.a.off(e, "click", l), o(e);
+        }), g = [], p = void 0, h = void 0, m = void 0;let e = d.a.$(t.value.container || defaultOpts.container);if (!e) return;d.a.off(e, "scroll", i);
+      } else o(e), d.a.off(e, "click", l);
+    }var f = n(4),
+        d = n(1),
+        v = n(0);let p,
+        h,
+        m,
+        b,
+        w = [],
+        g = [],
+        y = { bind(e, t) {
+        s(e, t);
+      }, unbind(e) {
+        u(e);
+      }, update(e, t) {
+        s(e, t);
+      }, utils: d.a, getDefaults: v.a, setDefaults: v.b, scrollTo: f.a, initScrollHandler: function initScrollHandler(e) {
+        e || (e = a(m).binding.value);let t = d.a.$(e.container || defaultOpts.container);if (!t) return console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${e.container || defaultOpts.container}" because it was not found in the DOM. Make sure it is in the DOM and then attach the \`onScroll\` handler yourself to it.`);a(t).binding.value = e, d.a.on(t, "scroll", i, { passive: !0 });
+      }, onScroll: i, bindings: w, navigationItems: g, initNavItems: c };t.a = y;
+  }, function (e, t, n) {
+    "use strict";
+    function o(e) {
+      e && (window.history.pushState ? window.history.pushState(null, null, e) : window.location.hash = e);
+    }var r = n(5),
+        a = n.n(r),
+        l = n(1),
+        i = n(0);const c = ["mousedown", "wheel", "DOMMouseScroll", "mousewheel", "keyup", "touchmove"],
+          s = (() => {
+      function e(e) {
+        let t = e.scrollTop;return "body" === e.tagName.toLowerCase() && (t = t || document.documentElement.scrollTop), t;
+      }function t(e) {
+        let t = e.scrollLeft;return "body" === e.tagName.toLowerCase() && (t = t || document.documentElement.scrollLeft), t;
+      }function n(e) {
+        if (N) return r();P || (P = e), X = e - P, Y = Math.min(X / v, 1), Y = $(Y), s(d, A + F * Y, L + M * Y), X < v ? window.AFRequestID = window.requestAnimationFrame(n) : r();
+      }function r() {
+        N || s(d, I, C), P = !1, j && o(T), D && !E && u(k, S), N && w && w(x), !N && b && b(), l.a.off(d, c, q), setTimeout(() => {
+          l.a.on(d, "scroll", E, { passive: !0 });
         }, 100);
-    }
-
-    function topLeft(element, top, left) {
-        if (y) element.scrollTop = top;
-        if (x) element.scrollLeft = left;
-        if (element.tagName.toLowerCase() === "body") {
-            // in firefox body.scrollTop doesn't scroll the page
-            // thus if we are trying to scrollTop on a body tag
-            // we need to scroll on the documentElement
-            if (y) document.documentElement.scrollTop = top;
-            if (x) document.documentElement.scrollLeft = left;
-        }
-    }
-
-    function updateClassName(element, otherElements) {
-        otherElements.forEach(elem => {
-            elem.classList.remove(activeClass);
-        });
-        element && element.classList.add(activeClass);
-    }
-
-    function scrollTo(target, _duration, options = {}) {
-        if (typeof _duration === "object") {
-            options = _duration;
-        } else if (typeof _duration === "number") {
-            options.duration = _duration;
-        }
-
-        targetElement = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(target);
-
-        if (!targetElement) {
-            return console.warn(`[navscroll-js]: Trying to scroll to element "${target}" that is not on the page. Make sure it is set in the DOM.`);
-        }
-
-        const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
-        container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(options.container || defaultOpts.container);
-        if (!container) {
-            return console.warn(`[navscroll-js]: Scrolling container "${options.container || defaultOpts.container}" is not present on the page.`);
-        }
-        duration = options.duration || defaultOpts.duration;
-        easing = options.easing || defaultOpts.easing;
-        offset = options.offset || defaultOpts.offset;
-        cancelable = options.cancelable !== false;
-        onDone = options.onDone || defaultOpts.onDone;
-        onCancel = options.onCancel || defaultOpts.onCancel;
-        x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
-        y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
-        activeClass = options.activeClass === undefined ? defaultOpts.activeClass : options.activeClass;
-        clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem;
-        hash = clickedNavItem ? clickedNavItem.hash || clickedNavItem.dataset.href : options.hash || defaultOpts.hash;
-        anchor = options.anchor === undefined ? defaultOpts.anchor : options.anchor;
-        navItems = options.navItems || defaultOpts.navItems;
-        alwaysTrack = options.alwaysTrack === undefined ? defaultOpts.alwaysTrack : options.alwaysTrack;
-        trackingFn = typeof options.trackingFn === 'function' ? options.trackingFn : defaultOpts.trackingFn;
-
-        let cumulativeOffset = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].cumulativeOffset(targetElement);
-
-        initialY = scrollTop(container);
-        targetY = cumulativeOffset.top - container.offsetTop - offset;
-
-        initialX = scrollLeft(container);
-        targetX = cumulativeOffset.left - container.offsetLeft - offset;
-
-        abort = false;
-
-        diffY = targetY - initialY;
-        diffX = targetX - initialX;
-
-        easing = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].cubicBezierArrayFrom(easing);
-
-        easingFn = __WEBPACK_IMPORTED_MODULE_0_bezier_easing___default.a.apply(__WEBPACK_IMPORTED_MODULE_0_bezier_easing___default.a, easing);
-
-        if (!diffY && !diffX) return;
-
-        if (!alwaysTrack) {
-            __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, 'scroll', trackingFn);
-            window.cancelAnimationFrame(window.AFRequestID);
-            updateClassName(clickedNavItem, navItems);
-        }
-
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, abortEvents, abortFn, { passive: true });
-
-        window.requestAnimationFrame(step);
-
-        return () => {
-            abortEv = null;
-            abort = true;
-        };
-    }
-
-    return scrollTo;
-};
-
-const _scroller = scroller();
-/* harmony default export */ __webpack_exports__["a"] = (_scroller);
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/**
- * https://github.com/gre/bezier-easing
- * BezierEasing - use bezier curve for transition easing function
- * by Gaëtan Renaudeau 2014 - 2015 – MIT License
- */
-
-// These values are established by empiricism with tests (tradeoff: performance VS precision)
-var NEWTON_ITERATIONS = 4;
-var NEWTON_MIN_SLOPE = 0.001;
-var SUBDIVISION_PRECISION = 0.0000001;
-var SUBDIVISION_MAX_ITERATIONS = 10;
-
-var kSplineTableSize = 11;
-var kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);
-
-var float32ArraySupported = typeof Float32Array === 'function';
-
-function A (aA1, aA2) { return 1.0 - 3.0 * aA2 + 3.0 * aA1; }
-function B (aA1, aA2) { return 3.0 * aA2 - 6.0 * aA1; }
-function C (aA1)      { return 3.0 * aA1; }
-
-// Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
-function calcBezier (aT, aA1, aA2) { return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT; }
-
-// Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-function getSlope (aT, aA1, aA2) { return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1); }
-
-function binarySubdivide (aX, aA, aB, mX1, mX2) {
-  var currentX, currentT, i = 0;
-  do {
-    currentT = aA + (aB - aA) / 2.0;
-    currentX = calcBezier(currentT, mX1, mX2) - aX;
-    if (currentX > 0.0) {
-      aB = currentT;
-    } else {
-      aA = currentT;
-    }
-  } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
-  return currentT;
-}
-
-function newtonRaphsonIterate (aX, aGuessT, mX1, mX2) {
- for (var i = 0; i < NEWTON_ITERATIONS; ++i) {
-   var currentSlope = getSlope(aGuessT, mX1, mX2);
-   if (currentSlope === 0.0) {
-     return aGuessT;
-   }
-   var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
-   aGuessT -= currentX / currentSlope;
- }
- return aGuessT;
-}
-
-module.exports = function bezier (mX1, mY1, mX2, mY2) {
-  if (!(0 <= mX1 && mX1 <= 1 && 0 <= mX2 && mX2 <= 1)) {
-    throw new Error('bezier x values must be in [0, 1] range');
-  }
-
-  // Precompute samples table
-  var sampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
-  if (mX1 !== mY1 || mX2 !== mY2) {
-    for (var i = 0; i < kSplineTableSize; ++i) {
-      sampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
-    }
-  }
-
-  function getTForX (aX) {
-    var intervalStart = 0.0;
-    var currentSample = 1;
-    var lastSample = kSplineTableSize - 1;
-
-    for (; currentSample !== lastSample && sampleValues[currentSample] <= aX; ++currentSample) {
-      intervalStart += kSampleStepSize;
-    }
-    --currentSample;
-
-    // Interpolate to provide an initial guess for t
-    var dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample + 1] - sampleValues[currentSample]);
-    var guessForT = intervalStart + dist * kSampleStepSize;
-
-    var initialSlope = getSlope(guessForT, mX1, mX2);
-    if (initialSlope >= NEWTON_MIN_SLOPE) {
-      return newtonRaphsonIterate(aX, guessForT, mX1, mX2);
-    } else if (initialSlope === 0.0) {
-      return guessForT;
-    } else {
-      return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize, mX1, mX2);
-    }
-  }
-
-  return function BezierEasing (x) {
-    if (mX1 === mY1 && mX2 === mY2) {
-      return x; // linear
-    }
-    // Because JavaScript number are imprecise, we should guarantee the extremes are right.
-    if (x === 0) {
-      return 0;
-    }
-    if (x === 1) {
-      return 1;
-    }
-    return calcBezier(getTForX(x), mY1, mY2);
-  };
-};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-  ease: [0.25, 0.1, 0.25, 1.0],
-  linear: [0.00, 0.0, 1.00, 1.0],
-  "ease-in": [0.42, 0.0, 1.00, 1.0],
-  "ease-out": [0.00, 0.0, 0.58, 1.0],
-  "ease-in-out": [0.42, 0.0, 0.58, 1.0]
+      }function s(e, t, n) {
+        y && (e.scrollTop = t), g && (e.scrollLeft = n), "body" === e.tagName.toLowerCase() && (y && (document.documentElement.scrollTop = t), g && (document.documentElement.scrollLeft = n));
+      }function u(e, t) {
+        t.forEach(e => {
+          e.classList.remove(O);
+        }), e && e.classList.add(O);
+      }let f,
+          d,
+          v,
+          p,
+          h,
+          m,
+          b,
+          w,
+          g,
+          y,
+          O,
+          k,
+          T,
+          j,
+          S,
+          D,
+          E,
+          L,
+          C,
+          A,
+          I,
+          M,
+          F,
+          N,
+          x,
+          $,
+          P,
+          X,
+          Y,
+          q = e => {
+        m && (x = e, N = !0);
+      };return function (o, r, s = {}) {
+        if ("object" == typeof r ? s = r : "number" == typeof r && (s.duration = r), !(f = l.a.$(o))) return console.warn(`[navscroll-js]: Trying to scroll to element "${o}" that is not on the page. Make sure it is set in the DOM.`);const P = Object(i.a)();if (!(d = l.a.$(s.container || P.container))) return console.warn(`[navscroll-js]: Scrolling container "${s.container || P.container}" is not present on the page.`);v = s.duration || P.duration, p = s.easing || P.easing, h = s.offset || P.offset, m = !1 !== s.cancelable, b = s.onDone || P.onDone, w = s.onCancel || P.onCancel, g = void 0 === s.scrollX ? P.scrollX : s.scrollX, y = void 0 === s.scrollY ? P.scrollY : s.scrollY, O = void 0 === s.activeClass ? P.activeClass : s.activeClass, k = s.clickedNavItem || P.clickedNavItem, T = k ? k.hash || k.dataset.href : s.hash || P.hash, j = void 0 === s.anchor ? P.anchor : s.anchor, S = s.navItems || P.navItems, D = void 0 === s.alwaysTrack ? P.alwaysTrack : s.alwaysTrack, E = "function" == typeof s.trackingFn ? s.trackingFn : P.trackingFn;let X = l.a.cumulativeOffset(f);return A = e(d), I = X.top - d.offsetTop - h, L = t(d), C = X.left - d.offsetLeft - h, N = !1, F = I - A, M = C - L, p = l.a.cubicBezierArrayFrom(p), $ = a.a.apply(a.a, p), F || M ? (D || (l.a.off(d, "scroll", E), window.cancelAnimationFrame(window.AFRequestID), u(k, S)), l.a.on(d, c, q, { passive: !0 }), window.requestAnimationFrame(n), () => {
+          x = null, N = !0;
+        }) : void 0;
+      };
+    })();t.a = s;
+  }, function (e, t) {
+    function n(e, t) {
+      return 1 - 3 * t + 3 * e;
+    }function o(e, t) {
+      return 3 * t - 6 * e;
+    }function r(e) {
+      return 3 * e;
+    }function a(e, t, a) {
+      return ((n(t, a) * e + o(t, a)) * e + r(t)) * e;
+    }function l(e, t, a) {
+      return 3 * n(t, a) * e * e + 2 * o(t, a) * e + r(t);
+    }function i(e, t, n, o, r) {
+      var l,
+          i,
+          c = 0;do {
+        (l = a(i = t + (n - t) / 2, o, r) - e) > 0 ? n = i : t = i;
+      } while (Math.abs(l) > f && ++c < d);return i;
+    }function c(e, t, n, o) {
+      for (var r = 0; r < s; ++r) {
+        var i = l(t, n, o);if (0 === i) return t;t -= (a(t, n, o) - e) / i;
+      }return t;
+    }var s = 4,
+        u = .001,
+        f = 1e-7,
+        d = 10,
+        v = 11,
+        p = 1 / (v - 1),
+        h = "function" == typeof Float32Array;e.exports = function (e, t, n, o) {
+      function r(t) {
+        for (var o = 0, r = 1, a = v - 1; r !== a && s[r] <= t; ++r) o += p;var f = o + (t - s[--r]) / (s[r + 1] - s[r]) * p,
+            d = l(f, e, n);return d >= u ? c(t, f, e, n) : 0 === d ? f : i(t, o, o + p, e, n);
+      }if (!(0 <= e && e <= 1 && 0 <= n && n <= 1)) throw new Error("bezier x values must be in [0, 1] range");var s = h ? new Float32Array(v) : new Array(v);if (e !== t || n !== o) for (var f = 0; f < v; ++f) s[f] = a(f * p, e, n);return function (l) {
+        return e === t && n === o ? l : 0 === l ? 0 : 1 === l ? 1 : a(r(l), t, o);
+      };
+    };
+  }, function (e, t, n) {
+    "use strict";
+    t.a = { ease: [.25, .1, .25, 1], linear: [0, 0, 1, 1], "ease-in": [.42, 0, 1, 1], "ease-out": [0, 0, .58, 1], "ease-in-out": [.42, 0, .58, 1] };
+  }]);
 });
 
 /***/ })

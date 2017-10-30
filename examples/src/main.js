@@ -1,6 +1,6 @@
 import './main.scss'
 
-import NavScroll from '../../src'
+import NavScroll from '../../dist/navscroll'
 
 new Vue({
   el: '#app',
