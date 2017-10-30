@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "title": "Nav Scroll JS",
   "description": "TODO",
-  "main": "navscroll.js",
+  "main": "src/index.js",
   "scripts": {
     "all": "yarn dev && yarn demo",
     "dev": "webpack --progress --hide-modules",

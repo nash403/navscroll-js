@@ -29,7 +29,10 @@
           <img src="logo.png"  width="80" height="80" alt="Navscroll logo"/>
       </div>
       <h2>NavScroll.js</h2>
-      <nav class="nav-scroll-items entries">
+
+
+
+      <!-- <nav class="nav-scroll-items entries">
         <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
             @click="resetActiveClass(i)"
             v-navscroll="{
@@ -40,7 +43,30 @@
             }">
             <span class="entry-name">Go to Table {{entry}}</span>
         </a>
-      </nav>
+      </nav> -->
+
+      <!-- <nav class="nav-scroll-items entries"
+        v-navscroll:scroll-item="{
+            container:'#scrollable-content',
+            activeClass,
+        }">
+        <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
+            @click="resetActiveClass(i)"
+            >
+            <span class="entry-name">Go to Table {{entry}}</span>
+        </a>
+    </nav> -->
+
+    <navscroll class="nav-scroll-items entries" :container="'#scrollable-content'" :active-class="activeClass" :always-track="true" :item-selector="'.scroll-itemb'">
+        <a class="entry scroll-itemb" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
+        >
+        <!-- @click="resetActiveClass(i)" -->
+            <span class="entry-name">Go to Table {{entry}}</span>
+        </a>
+    </navscroll>
+
+
+
       <p class="cc-note">Favicon by Yaroslav Samoilov from the Noun Project</p>
     </div> <!-- sidebar -->
 

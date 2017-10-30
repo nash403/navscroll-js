@@ -27,7 +27,7 @@ const configureBabelLoader = (browserlist) => {
 
 const baseConfig = {
   output: {
-    path: __dirname,
+    path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     filename: '[name].js',
     library: 'NavScroll',
