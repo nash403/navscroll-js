@@ -111,7 +111,7 @@ let defaults = {
   * Threshold amount of space between left side of screen and the section to
   * highlight (for the onScroll handler) from which the section will be marked as the current one.
   *
-  * @default (Middle of the X axis of the screen, calculated each time onScroll is called)
+  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
   * @type {Number}
   */
   onScrollOffsetX: undefined,
@@ -119,7 +119,7 @@ let defaults = {
   * Threshold amount of space between top side of screen and the section to
   * highlight (for the onScroll handler) from which the section will be marked as the current one.
   *
-  * @default (Middle of the Y axis of the screen, calculated each time onScroll is called)
+  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
   * @type {Number}
   */
   onScrollOffsetY: undefined,
