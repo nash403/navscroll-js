@@ -100,13 +100,29 @@ let defaults = {
   */
   easing: "ease",
   /**
-  * Amount of space between top of screen and the section to
+  * Amount of space between top / left side of screen and the section to
   * highlight.
   *
   * @default 0
   * @type {Number}
   */
   offset: 0,
+  /**
+  * Threshold amount of space between left side of screen and the section to
+  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  *
+  * @default (Middle of the X axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetX: undefined,
+  /**
+  * Threshold amount of space between top side of screen and the section to
+  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  *
+  * @default (Middle of the Y axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetY: undefined,
   /**
   * Allow the scroll animation to be cancelled.
   * In that case, events like 'keyup' or 'touchmove' will cancel the animation
@@ -196,23 +212,15 @@ let defaults = {
   * Defines whether to track section changes when
   * clicking an item to scroll to its section. If set to true,
   * the scrolling listener will always keep track and change the active class
-  * to the current section while scrolling, if false, the scrolling handler provided
-  * with the `trackingFn` option will be removed temporarily from the scrolling container
-  * and the active class will be immediately applied to the clicked menu item, ignoring
-  * the passed sections until the scrolling is over.
+  * to the current section while scrolling, if false, the scrolling handler will be
+  * removed temporarily from the scrolling container and the active class will be
+  * immediately applied to the clicked menu item, ignoring the passed sections
+  * until the scrolling is over.
   *
   * @default false
   * @type {Boolean}
   */
   alwaysTrack: false,
-  /**
-  * Scrolling listener on the container that should be removed when
-  * the `alwaysTrack` option is set to false.
-  *
-  * @default null
-  * @type {Function}
-  */
-  trackingFn: null,
   /**
   * Class that will be applied in the menu item.
   *
@@ -376,6 +384,7 @@ new Vue({
   },
   mounted() {
     this.$refs.entries[0].classList.add(this.activeClass);
+    __WEBPACK_IMPORTED_MODULE_1__src__["a" /* default */].initScrollHandler();
   },
   methods: {
     resetActiveClass(entryIndex) {
@@ -401,14 +410,12 @@ new Vue({
 
 
 const install = function install(Vue, options) {
-    if (options) Object(__WEBPACK_IMPORTED_MODULE_1__default_props__["b" /* setDefaults */])(options);
+    if (options) setDefaults(options);
     Vue.directive("scroll-to", __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */]);
     Vue.prototype.$scrollTo = __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].scrollTo;
 };
 
 __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].install = install;
-__WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].setDefaults = __WEBPACK_IMPORTED_MODULE_1__default_props__["b" /* setDefaults */];
-__WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */].getDefaults = __WEBPACK_IMPORTED_MODULE_1__default_props__["a" /* default */];
 
 if (typeof window !== "undefined" && window.Vue) {
     window.NavScroll = __WEBPACK_IMPORTED_MODULE_0__navscroll__["a" /* default */];
@@ -422,6 +429,7 @@ if (typeof window !== "undefined" && window.Vue) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* unused harmony export onScroll */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scrollTo__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_props__ = __webpack_require__(0);
@@ -434,7 +442,8 @@ let bindings = []; // store binding data
 let navigationItems = [];
 let navItemsClassName; // store the class name used to find the navigation items
 let observer; // mutation observer that will observe DOM changes
-let elementWrapper; // container element that wraps the navigation items
+let elementWrapper; // element that wraps the navigation items
+let lastActiveItem;
 
 function deleteBinding(el) {
   for (let i = 0; i < bindings.length; ++i) {
@@ -485,13 +494,92 @@ function handleClick(e) {
   if (stop) e.stopPropagation();
 
   if (typeof options === "string") {
-    return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone, clickedNavItem: clickedElement /* navItems: ... */ });
+    return Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options, { onDone, clickedNavItem: clickedElement, navItems: navigationItems });
   }
 
   options.onDone = onDone;
   options.clickedNavItem = clickedElement;
-  // options.navItems = ...
+  options.navItems = navigationItems;
+  options.trackingFn = onScroll;
   Object(__WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */])(options.el || options.element, options);
+}
+
+// If the `navItems` option is set it will not be taken into account
+// The `navigationItems` variable has to be set prior to a call to onScroll
+function onScroll(event, opts) {
+  let currentItem;
+
+  const defaultOpts = Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])();
+  const options = opts || getBinding(elementWrapper).binding.value;
+
+  let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(options.container || defaultOpts.container);
+  let offsetY = options.onScrollOffsetY || Math.round((window.innerHeight || document.documentElement.clientHeight) / 3) * 2;
+  let offsetX = options.onScrollOffsetX || Math.round((window.innerWidth || document.documentElement.clientWidth) / 3) * 2;
+  let activeClass = options.activeClass === undefined ? defaultOpts.activeClass : options.activeClass;
+  let x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
+  let y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
+
+  if (!container) return;
+
+  navigationItems.forEach(item => {
+    item.classList.remove(activeClass);
+
+    const targetDiscriminator = item.hash ? item.hash.substr(1) : item.dataset.href;
+    const targetElement = document.getElementById(targetDiscriminator);
+    if (!targetElement) {
+      // Return silently if target is not present to avoid polluting the console with warnings
+      return;
+    }
+
+    let cumulativeOffset = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].cumulativeOffset(targetElement);
+    if (y && container.scrollTop >= cumulativeOffset.top - offsetY) {
+      currentItem = item;
+    }
+    if (x && container.scrollLeft >= cumulativeOffset.left - offsetX) {
+      currentItem = item;
+    }
+  });
+
+  if (currentItem !== lastActiveItem) {
+    lastActiveItem = currentItem;
+  }
+
+  if (currentItem) currentItem.classList.add(activeClass);
+}
+
+function initNavItems(DOMMutations, el, itemsClassName) {
+  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
+
+  let wrapper = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(el || elementWrapper);
+  let className = itemsClassName || navItemsClassName;
+
+  navigationItems.forEach(item => deleteBinding(item));
+  navigationItems = Array.prototype.slice.call(wrapper.getElementsByClassName(className));
+
+  const wrapperBinding = getBinding(wrapper).binding; // if el is set, its binding shall exist
+  const options = wrapperBinding.value;
+
+  if (options.clickToScroll === undefined ? Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])().clickToScroll : options.clickToScroll) {
+    navigationItems.forEach(item => {
+      let binding = Object.assign({}, wrapperBinding);
+      binding.value = Object.assign({}, binding.value, { el: item.hash });
+      getBinding(item).binding = binding;
+      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(item, 'click', handleClick);
+    });
+    return;
+  }
+  navigationItems.forEach(item => {
+    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
+  });
+}
+
+function initScrollHandler(options) {
+  if (!options) options = getBinding(elementWrapper).binding.value;
+  let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(options.container || defaultOpts.container);
+  if (!container) {
+    return console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${options.container || defaultOpts.container}" because it was not found in the DOM. Make sure it is in the DOM and then attach the \`onScroll\` handler yourself to it.`);
+  }
+  __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, 'scroll', onScroll, { passive: true });
 }
 
 function onBindOrUpdate(el, binding) {
@@ -502,7 +590,7 @@ function onBindOrUpdate(el, binding) {
   navItemsClassName = binding.arg;
 
   if (navItemsClassName) {
-    // wrapper mode: the element directive is the container of the navigation items
+    // wrapper mode: the directive's element is an ancestor of the navigation items
 
     elementWrapper = el;
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -512,7 +600,7 @@ function onBindOrUpdate(el, binding) {
       childList: true,
       subtree: true
     });
-    initNavItems();
+    initNavItems(null, el, navItemsClassName);
   } else {
     // item mode: the element directive is the navigation item
 
@@ -521,28 +609,6 @@ function onBindOrUpdate(el, binding) {
     } else {
       __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
     }
-  }
-}
-
-function initNavItems(DOMMutations) {
-  // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object
-  navigationItems.forEach(item => deleteBinding(item));
-  navigationItems = Array.prototype.slice.call(elementWrapper.getElementsByClassName(navItemsClassName));
-
-  const wrapperBinding = getBinding(elementWrapper).binding;
-  const options = wrapperBinding.value;
-
-  if (options.clickToScroll === undefined ? Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */])().clickToScroll : options.clickToScroll) {
-    navigationItems.forEach(item => {
-      let binding = Object.assign({}, wrapperBinding);
-      binding.value = Object.assign({}, binding.value, { el: item.hash });
-      getBinding(item).binding = binding;
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(item, 'click', handleClick);
-    });
-  } else {
-    navigationItems.forEach(item => {
-      __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(item, 'click', handleClick);
-    });
   }
 }
 
@@ -557,6 +623,9 @@ function onUnbind(el) {
     navItemsClassName = undefined;
     observer = undefined;
     elementWrapper = undefined;
+    let container = __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].$(binding.value.container || defaultOpts.container);
+    if (!container) return;
+    __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, 'scroll', onScroll);
   } else {
     deleteBinding(el);
     __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(el, "click", handleClick);
@@ -574,8 +643,15 @@ function onUnbind(el) {
   update(el, binding) {
     onBindOrUpdate(el, binding);
   },
+  utils: __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */],
+  getDefaults: __WEBPACK_IMPORTED_MODULE_2__default_props__["a" /* default */],
+  setDefaults: __WEBPACK_IMPORTED_MODULE_2__default_props__["b" /* setDefaults */],
   scrollTo: __WEBPACK_IMPORTED_MODULE_0__scrollTo__["a" /* default */],
-  bindings
+  initScrollHandler,
+  onScroll,
+  bindings,
+  navigationItems,
+  initNavItems
 });
 
 /***/ }),
@@ -693,10 +769,13 @@ const scroller = () => {
         if (alwaysTrack && !trackingFn) {
             updateClassName(clickedNavItem, navItems);
         }
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, 'scroll', trackingFn, { passive: true });
-        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, abortEvents, abortFn);
         if (abort && onCancel) onCancel(abortEv);
         if (!abort && onDone) onDone();
+        __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].off(container, abortEvents, abortFn);
+        setTimeout(() => {
+            // workaround to avoid the tracking function to be called right after we re-added it to the container
+            __WEBPACK_IMPORTED_MODULE_1__utils__["a" /* default */].on(container, 'scroll', trackingFn, { passive: true });
+        }, 100);
     }
 
     function topLeft(element, top, left) {
@@ -746,7 +825,7 @@ const scroller = () => {
         y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
         activeClass = options.activeClass === undefined ? defaultOpts.activeClass : options.activeClass;
         clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem;
-        hash = clickedNavItem ? clickedNavItem.hash : options.hash || defaultOpts.hash;
+        hash = clickedNavItem ? clickedNavItem.hash || clickedNavItem.dataset.href : options.hash || defaultOpts.hash;
         anchor = options.anchor === undefined ? defaultOpts.anchor : options.anchor;
         navItems = options.navItems || defaultOpts.navItems;
         alwaysTrack = options.alwaysTrack === undefined ? defaultOpts.alwaysTrack : options.alwaysTrack;

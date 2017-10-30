@@ -1,5 +1,5 @@
 import NavScroll from "./navscroll";
-import defaults, { setDefaults } from "./default-props";
+import defaults from "./default-props";
 
 const install = function(Vue, options) {
     if (options) setDefaults(options);
@@ -8,8 +8,6 @@ const install = function(Vue, options) {
 };
 
 NavScroll.install = install;
-NavScroll.setDefaults = setDefaults;
-NavScroll.getDefaults = defaults;
 
 if (typeof window !== "undefined" && window.Vue) {
     window.NavScroll = NavScroll;
