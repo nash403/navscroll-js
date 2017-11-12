@@ -58,7 +58,7 @@ This package was inspired by two other great packages: [vue-scrollactive](https:
 
 - Uses vanilla JS !
 
-Be sure to check the <a href="http://localhost:8000/examples/index.html">live demo</a> !
+Be sure to check the <a href="https://nash403.github.io/navscroll-js/examples/index.html">live demo</a> !
 
 ## Usage
 
