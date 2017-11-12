@@ -167,7 +167,9 @@ const scroller = () => {
         duration = options.duration || defaultOpts.duration;
         easing = options.easing || defaultOpts.easing;
         offset = options.offset || defaultOpts.offset;
-        cancelable = options.cancelable !== false;
+        cancelable = "cancelable" in options
+                    ? options.cancelable !== false
+                    : defaultOpts.cancelable;
         onDone = options.onDone || defaultOpts.onDone;
         onCancel = options.onCancel || defaultOpts.onCancel;
         x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
