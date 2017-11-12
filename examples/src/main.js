@@ -70,7 +70,6 @@ let NavigationExample3 = {
         :href="'#'+entry+'-target'"
         class="entry item"
         v-navscroll="{
-          el: '#'+entry+'-target',
           container, activeClass, offset, alwaysTrack, duration,
           offset, easing, anchor, cancelable, scrollX, scrollY
         }">
