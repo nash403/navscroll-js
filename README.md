@@ -1,5 +1,9 @@
 # navscroll-js
 
+[![npm](https://img.shields.io/npm/v/navscroll.svg)](https://www.npmjs.com/package/navscroll)
+[![npm](https://img.shields.io/npm/dm/navcroll.svg)](https://www.npmjs.com/package/navscroll)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/nash403/navscroll-js/blob/master/LICENSE)
+
 ## Installation
 
 This package is available on npm.
