@@ -411,26 +411,136 @@ a {
   color: inherit;
   text-decoration: none; }
 
+.github-fork-ribbon.left-top:before {
+  background-color: #090; }
+
+a.github-fork-ribbon, a.github-fork-ribbon:visited {
+  color: #c00; }
+
+@keyframes bounceInLeft {
+  from, 60%, 75%, 90%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
+  0% {
+    opacity: 0;
+    transform: translate3d(-3000px, 0, 0); }
+  60% {
+    opacity: 1;
+    transform: translate3d(25px, 0, 0); }
+  75% {
+    transform: translate3d(-10px, 0, 0); }
+  90% {
+    transform: translate3d(5px, 0, 0); }
+  to {
+    transform: none; } }
+
+.bounce-in-enter-active, .bounce-in-leave-active {
+  animation-name: bounceInLeft;
+  animation-duration: 0.4s;
+  animation-fill-mode: both; }
+
+.bounce-in-leave-active {
+  animation-direction: reverse; }
+
 #app {
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start; }
   #app .content {
-    overflow: hidden; }
+    overflow: hidden;
+    flex: 1; }
     #app .content .header {
       padding: 0.67em 2em;
       box-shadow: 0 10px 10px RGBA(75, 92, 109, 0.3);
-      z-index: 999; }
+      z-index: 999;
+      position: relative;
+      /* Custom Select */ }
       #app .content .header h1#navscroll-title {
         margin: 8px 0; }
         #app .content .header h1#navscroll-title code {
           color: #f58e8e; }
+      #app .content .header .label {
+        margin: 0.25em 0; }
+      #app .content .header .btn {
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        border: 0;
+        text-decoration: underline;
+        margin: 4px;
+        outline: none;
+        cursor: pointer; }
+      #app .content .header .select {
+        position: relative;
+        display: inline-block;
+        width: 28em;
+        height: 3em;
+        line-height: 3;
+        background: #2c3e50;
+        overflow: hidden;
+        border-radius: .25em; }
+        #app .content .header .select select {
+          /* Reset Select */
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          -ms-appearance: none;
+          appearance: none;
+          outline: 0;
+          box-shadow: none;
+          border: 0 !important;
+          background: #2c3e50;
+          background-image: none;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0 0 0 .5em;
+          color: #fff;
+          cursor: pointer; }
+          #app .content .header .select select::-ms-expand {
+            display: none; }
+        #app .content .header .select:hover::after {
+          color: #f39c12; }
+        #app .content .header .select::after {
+          /* Arrow */
+          content: '\25BC';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          padding: 0 1em;
+          background: #34495e;
+          pointer-events: none;
+          /* Transition */
+          -webkit-transition: .25s all ease;
+          -o-transition: .25s all ease;
+          transition: .25s all ease; }
+      #app .content .header pre {
+        white-space: pre-wrap;
+        height: 0;
+        overflow: hidden; }
+        #app .content .header pre.pre-open {
+          height: auto;
+          width: auto;
+          background-color: #dedede;
+          padding: 8px 12px;
+          border-left: 4px solid #4CAF50;
+          word-wrap: break-word;
+          font-family: Consolas,"courier new"; }
     #app .content #scrollable-content {
-      z-index: -1;
       width: 100%;
-      position: relative;
-      height: calc(100vh - 5em);
+      height: 100%;
       overflow: auto;
       padding: 2em 2.5em 1em; }
+      #app .content #scrollable-content * {
+        transition: all 0.4s; }
+      #app .content #scrollable-content.scrollx {
+        overflow-y: hidden;
+        white-space: nowrap;
+        height: 700px; }
+        #app .content #scrollable-content.scrollx .card-section {
+          display: inline-block;
+          margin: 0 2em auto;
+          height: 100%; }
       #app .content #scrollable-content .card-section {
         margin: 0 auto 2em;
         min-width: 400px;
@@ -462,14 +572,15 @@ a {
           #app .content #scrollable-content .card-section table tr:hover {
             background-color: rgba(253, 150, 159, 0.2); }
   #app .sidebar {
-    width: 15rem;
     height: 100%;
     float: left;
     background-image: linear-gradient(135deg, #5f7770, #485B55);
     font-size: 0.8rem;
     position: relative;
     color: #D6D9DD;
-    min-height: 600px; }
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 15rem; }
     #app .sidebar > * {
       float: left;
       width: 100%; }
@@ -481,21 +592,61 @@ a {
       text-align: center;
       margin: 1.2em 0;
       text-decoration: underline; }
-    #app .sidebar .cc-note {
-      color: #b7c2cd;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.5em 1em; }
-      @media screen and (min-height: 600px) {
-        #app .sidebar .cc-note {
-          position: absolute;
-          bottom: 0; } }
+    #app .sidebar .options-toggle {
+      display: block;
+      height: 3em;
+      -webkit-appearance: none;
+      background: rgba(0, 0, 0, 0.1);
+      border: 0;
+      cursor: pointer;
+      color: #D5D8DC; }
+    #app .sidebar .navscroll-options {
+      opacity: 1;
+      right: 20px;
+      position: absolute;
+      left: calc(100%);
+      bottom: 0px;
+      z-index: 10;
+      min-width: 200px;
+      padding: 15px 30px;
+      border-radius: 0 10px 10px 0;
+      background-color: rgba(78, 97, 91, 0.9); }
+      #app .sidebar .navscroll-options:not(.visible) {
+        display: none;
+        transition: all 1s; }
+      #app .sidebar .navscroll-options label {
+        color: #D6D9DD; }
+      #app .sidebar .navscroll-options button {
+        background-color: #D9F0E2;
+        cursor: pointer;
+        color: #607770;
+        -webkit-appearance: button;
+        text-transform: none; }
+        #app .sidebar .navscroll-options button:hover {
+          background-color: #607770;
+          color: #D9F0E2; }
+      #app .sidebar .navscroll-options button, #app .sidebar .navscroll-options input {
+        overflow: visible;
+        font-family: sans-serif;
+        font-size: 100%;
+        line-height: 1.15;
+        display: block;
+        width: 100%;
+        height: 42px;
+        padding: 10px 20px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        border: 0;
+        border: 2px solid #D9F0E2;
+        border-radius: 10px;
+        font-weight: 600;
+        outline: 0;
+        transition: all .1s; }
     #app .sidebar .entries {
       margin-top: 2em;
-      flex-grow: 1;
       overflow-y: auto;
       font-size: 0.8rem;
-      direction: rtl;
-      max-height: 60vh; }
+      direction: rtl; }
       #app .sidebar .entries::-webkit-scrollbar {
         width: 10px;
         height: 10px;
@@ -536,3 +687,8 @@ a {
             border-right-color: #FAFCFD; }
         #app .sidebar .entries .entry:hover {
           background-color: rgba(0, 0, 0, 0.1); }
+    #app .sidebar .cc-note {
+      color: #b7c2cd;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5em 1em;
+      margin-top: auto; }

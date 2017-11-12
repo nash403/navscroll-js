@@ -115,7 +115,7 @@ const scroller = () => {
           updateClassName(clickedNavItem, navItems)
         }
         if (abort && onCancel) onCancel(abortEv);
-        if (!abort && onDone) onDone();
+        if (onDone) onDone();
         _.off(container, abortEvents, abortFn);
         setTimeout(() => {
           // workaround to avoid the tracking function to be called right after we re-added it to the container
@@ -167,7 +167,9 @@ const scroller = () => {
         duration = options.duration || defaultOpts.duration;
         easing = options.easing || defaultOpts.easing;
         offset = options.offset || defaultOpts.offset;
-        cancelable = options.cancelable !== false;
+        cancelable = "cancelable" in options
+                    ? options.cancelable !== false
+                    : defaultOpts.cancelable;
         onDone = options.onDone || defaultOpts.onDone;
         onCancel = options.onCancel || defaultOpts.onCancel;
         x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;

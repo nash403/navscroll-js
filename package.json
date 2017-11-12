@@ -1,7 +1,7 @@
 {
   "name": "navscroll-js",
   "version": "0.1.1",
-  "title": "Nav Scroll JS",
+  "title": "NavScroll.js",
   "description": "TODO",
   "main": "src/index.js",
   "scripts": {
@@ -18,10 +18,11 @@
     "vue-plugin",
     "vue-component",
     "vue-directive",
-    "scroll",
+    "scroll-to",
+    "on-scroll",
     "navigation",
     "active-menu-item",
-    "vanilla"
+    "vanilla-js"
   ],
   "author": {
     "name": "Honoré Nintunze",

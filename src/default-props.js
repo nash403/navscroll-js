@@ -8,6 +8,30 @@ let defaults = {
   */
   container: 'body',
   /**
+  * Selector that will be used to recognize the navigation items inside the navigation wrapper.
+  *
+  * @default  'scroll-item'
+  * @type {String}
+  */
+  itemSelector: '.scroll-item',
+  /**
+  * Class that will be applied to the menu item after the scroll animation.
+  *
+  * @default  'active'
+  * @type {String}
+  */
+  activeClass: 'active',
+  /**
+   * The target element/selector for the scrollTo method. Only used when registering
+   * click handlers on the nav items. If the option is not set, registration will use
+   * the href or the dataset.href of the registered nav item.
+   * Alias: 'element'
+   *
+   * @default null
+   * @type {String|HTMLElement}
+   */
+  el: null,
+  /**
   * The duration of the scroll animation
   *
   * @default 600
@@ -17,88 +41,16 @@ let defaults = {
   /**
   * Your custom easing value for the click to scroll functionality.
   * It must be:
-  * - a string with 4 values separated by commas in a cubic bezier format.
+  * - a string with 4 values separated by commas in a cubic bezier format (ex: '.5,0,.35,1').
   * - a string value among one of the following values:
   *       'ease', 'linear', 'ease-in', 'ease-out' or 'ease-in-out'
-  * - an array of 4 values in a cubic bezier format
+  * - an array of 4 values in a cubic bezier format (ex: [0.5, 0, 0.35, 1]).
   *
   * @example ".5,0,.35,1"
   * @default 'ease'
   * @type {String|Array}
   */
   easing: "ease",
-  /**
-  * Amount of space between top / left side of screen and the section to
-  * highlight.
-  *
-  * @default 0
-  * @type {Number}
-  */
-  offset: 0,
-  /**
-  * Threshold amount of space between left side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
-  *
-  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
-  * @type {Number}
-  */
-  onScrollOffsetX: undefined,
-  /**
-  * Threshold amount of space between top side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
-  *
-  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
-  * @type {Number}
-  */
-  onScrollOffsetY: undefined,
-  /**
-  * Allow the scroll animation to be cancelled.
-  * In that case, events like 'keyup' or 'touchmove' will cancel the animation
-  * and scroll the content immediately to the target.
-  *
-  * @default 0
-  * @type {Boolean}
-  */
-  cancelable: true,
-  /**
-  * Callback called when scrolling is finished.
-  * Also called when the scroll animation is cancelled.
-  *
-  * @default null
-  * @type {Function}
-  */
-  onDone: null,
-  /**
-  * Callback called when the scroll animation is cancelled.
-  *
-  * @default null
-  * @type {Function}
-  */
-  onCancel: null,
-  /**
-  * Whether to stop the propagation of the click event on a menu item
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  stopPropagation: true,
-  /**
-  * Whether to update window.location.hash when a link menu item with a href is clicked
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  anchor: true,
-  /**
-  * Hash of the target section.
-  * It will be applyed to window.location.hash if the `anchor` option is set to true.
-  * If the `clickedNavItem` option is set and the element has a hash it will have priority
-  * to this option.
-  *
-  * @default null
-  * @type {String}
-  */
-  hash: null,
   /**
   * Whether to scroll on the X axis
   *
@@ -113,6 +65,92 @@ let defaults = {
   * @type {Boolean}
   */
   scrollY: true,
+  /**
+  * Amount of space between top / left side of screen and the section to
+  * highlight.
+  *
+  * @default 0
+  * @type {Number}
+  */
+  offset: 0,
+  /**
+  * Threshold amount of space between left side of screen and the section to
+  * highlight as the current one (for the onScroll handler).
+  *
+  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetX: undefined,
+  /**
+  * Threshold amount of space between top side of screen and the section to
+  * highlight as the current one (for the onScroll handler).
+  *
+  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
+  * @type {Number}
+  */
+  onScrollOffsetY: undefined,
+  /**
+  * Defines whether to track section changes when
+  * clicking an item to scroll to its section. If set to true,
+  * the scrolling listener will always keep track and change the active class
+  * to the current section while scrolling, if false, the scrolling handler will be
+  * removed temporarily from the scrolling container and the active class will be
+  * immediately applied to the clicked menu item, ignoring the passed sections
+  * until the scrolling is over.
+  *
+  * @default false
+  * @type {Boolean}
+  */
+  alwaysTrack: false,
+  /**
+  * Allow the scroll animation to be cancelled.
+  * In that case, events like 'keyup' or 'touchmove' will cancel the animation
+  * and scroll the content immediately to the target.
+  *
+  * @default 0
+  * @type {Boolean}
+  */
+  cancelable: true,
+  /**
+  * Whether to stop the propagation of the click event on a menu item
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  stopPropagation: true,
+  /**
+  * Callback called when scrolling is finished.
+  * Also called when the scroll animation is cancelled (right after the onCancel callback).
+  *
+  * @default null
+  * @type {Function}
+  */
+  onDone: null,
+  /**
+  * Callback called when the scroll animation is cancelled.
+  *
+  * @default null
+  * @type {Function}
+  */
+  onCancel: null,
+  /**
+  * Whether to update window.location.hash when a link menu item with a href is clicked
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  anchor: true,
+  /**
+  * Hash of the target section.
+  * It will be applyed to window.location.hash if the `anchor` option is set to true.
+  *
+  * NOTE: If the clicked item or if the `clickedNavItem` option is set and the element has
+  * a href or a data-href attribute, this attribute it will have priority to this option.
+  *
+  * @default null
+  * @type {String}
+  */
+  hash: null,
   /**
   * Enables/disables the scrolling when clicking in a menu item.
   * Disable if you'd like to handle the scrolling by your own.
@@ -136,33 +174,6 @@ let defaults = {
   * @type {Array<HTMLElement>}
   */
   navItems: [],
-  /**
-  * Defines whether to track section changes when
-  * clicking an item to scroll to its section. If set to true,
-  * the scrolling listener will always keep track and change the active class
-  * to the current section while scrolling, if false, the scrolling handler will be
-  * removed temporarily from the scrolling container and the active class will be
-  * immediately applied to the clicked menu item, ignoring the passed sections
-  * until the scrolling is over.
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  alwaysTrack: false,
-  /**
-  * Class that will be applied in the menu item.
-  *
-  * @default  'active'
-  * @type {String}
-  */
-  activeClass: 'active',
-  /**
-  * Class that will be used to recognize the click-to-scroll navigation items
-  *
-  * @default  'scroll-item'
-  * @type {String}
-  */
-  itemSelector: '.scroll-item',
 };
 
 

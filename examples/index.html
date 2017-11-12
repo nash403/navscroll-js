@@ -1,107 +1,102 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>NavSroll.js</title>
-  <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
-  <!--[if lt IE 9]>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
-  <![endif]-->
-  <link rel="stylesheet" type="text/css" href="assets/main.css">
-  <style>
-    .github-fork-ribbon.left-top:before {
-        background-color: #090;
-    }
-    a.github-fork-ribbon, a.github-fork-ribbon:visited {
-    color: #c00;
-}
-  </style>
+    <meta charset="utf-8">
+    <title>NavSroll.js</title>
+    <link rel="icon" href="favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css"
+    />
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="assets/main.css">
 </head>
 
 <body>
     <a class="github-fork-ribbon left-top" href="http://localhost:8000/examples/index.html" title="Fork me on GitHub">Fork me on GitHub (TODO)</a>
-  <div id="app">
+    <div id="app">
 
-    <div class="sidebar">
-      <div class="logo">
-          <img src="logo.png"  width="80" height="80" alt="Navscroll logo"/>
-      </div>
-      <h2>NavScroll.js</h2>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" width="80" height="80" alt="Navscroll logo" />
+            </div>
+            <h2>NavScroll.js</h2>
 
+            <button class="options-toggle" @click="toggleOptions($event)">Toggle options &#8651;</button>
+            <div class="navscroll-options" ref="options">
+                <button @click="entriesArray.push(entriesArray.length)">Add new element</button>
+                <button @click="entriesArray.pop()">Remove last element</button>
+                <button @click="alwaysTrack=!alwaysTrack">Always track {{alwaysTrack ? 'on' : 'off'}}</button>
+                <button @click="anchor=!anchor">Anchor {{anchor ? 'on' : 'off'}}</button>
+                <button @click="cancelable=!cancelable">Cancelable {{cancelable ? 'on' : 'off'}}</button>
+                <label for="duration">Duration</label>
+                <input type="number" id="duration" v-model="duration">
+                <label for="offset">Offset</label>
+                <input type="number" id="offset" v-model="offset">
+                <label for="easing">Easing (cubic-bezier format)</label>
+                <input type="text" id="easing" v-model.lazy="easing">
+                <label for="axis">Scroll axis (checked='{{scrollAxis.toUpperCase()}}')</label>
+                <input type="checkbox" v-model="scrollAxis" :true-value="'y'" :false-value="'x'">
+            </div>
 
+            <transition name="bounce-in" mode="out-in">
+                <component :is="sidebar" v-bind="prop"></component>
+            </transition>
 
-      <!-- <nav class="nav-scroll-items entries">
-        <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
-            @click="resetActiveClass(i)"
-            v-navscroll="{
-                el: `#${entry}-target`,
-                offset: 20,
-                container:'#scrollable-content',
-                activeClass,
-            }">
-            <span class="entry-name">Go to Table {{entry}}</span>
-        </a>
-      </nav> -->
+            <p class="cc-note">Favicon by Yaroslav Samoilov from the Noun Project</p>
+        </div>
+        <!-- sidebar -->
 
-      <!-- <nav class="nav-scroll-items entries"
-        v-navscroll:scroll-item="{
-            container:'#scrollable-content',
-            activeClass,
-        }">
-        <a class="entry scroll-item" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
-            @click="resetActiveClass(i)"
-            >
-            <span class="entry-name">Go to Table {{entry}}</span>
-        </a>
-    </nav> -->
+        <div class="content">
+            <div class="header">
+                <h1 id="navscroll-title">See how
+                    <code>navscroll.js</code> works great! 🚀</h1>
+                <div class="label">
+                    <label for="sb">Please select a navigation (current: "{{ sidebar }}")</label>
+                </div>
+                <div style="display: flex;margin: 4px 0;">
+                    <div class="select">
+                        <select v-model="sidebar" id="sb">
+                            <option value="nav-ex1">Sidebar with navscroll component</option>
+                            <option value="nav-ex2">Sidebar with navscroll directive on the wrapper</option>
+                            <option value="nav-ex3">Sidebar with navscroll directive on each item</option>
+                        </select>
+                    </div>
+                    <button class="btn" @click="preClass = preClass === 'pre-open' ?  '' : 'pre-open'">{{ preClass === 'pre-open' ? 'Hide' : 'Show'}} code</button>
+                </div>
+                <div>
+                    <pre :class="preClass" v-html="code"></pre>
+                </div>
+            </div>
 
-    <navscroll class="nav-scroll-items entries" :container="'#scrollable-content'" :active-class="activeClass" :always-track="true" :item-selector="'.scroll-itemb'">
-        <a class="entry scroll-itemb" :href="`#${entry}-target`" ref="entries" v-for="(entry,i) of entries" :key="`entry-${i}`"
-        >
-        <!-- @click="resetActiveClass(i)" -->
-            <span class="entry-name">Go to Table {{entry}}</span>
-        </a>
-    </navscroll>
+            <main id="scrollable-content" :class="scrollAxis === 'x' ? 'scrollx' :''">
 
+                <section class="card-section" ref="targets" :id="`${target}-target`" v-for="(target, i) of entries" :key="target">
+                    <h3>Table {{target}}</h3>
+                    <table>
+                        <thead>
+                            <th v-for="header of [1, 2, 3, 4, 5, 6]">HEADER {{header}}</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="line of Array.from(new Array(25), (_,i)=>i)" :key="'line-'+line">
+                                <td v-for="cell of [1, 2, 3, 4, 5, 6]" :key="'cell-'+cell">CELL {{cell}} / LINE {{line}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
 
-
-      <p class="cc-note">Favicon by Yaroslav Samoilov from the Noun Project</p>
-    </div> <!-- sidebar -->
-
-    <div class="content">
-        <div class="header">
-            <h1 id="navscroll-title">See how <code>navscroll.js</code> works great! 🚀</h1>
+            </main>
         </div>
 
-        <main id="scrollable-content">
+    </div> <!-- #app -->
 
-            <section class="card-section" ref="targets" :id="`${target}-target`" v-for="(target, i) of entries" :key="target">
-                <h3>Table {{target}}</h3>
-                <table>
-                <thead>
-                    <th v-for="header of [1, 2, 3, 4, 5, 6]">HEADER {{header}}</th>
-                </thead>
-                <tbody>
-                    <tr v-for="line of Array.from(new Array(25), (_,i)=>i)"  :key="'line-'+line">
-                        <td v-for="cell of [1, 2, 3, 4, 5, 6]" :key="'cell-'+cell">CELL {{cell}} / LINE {{line}}</td>
-                    </tr>
-                </tbody>
-                </table>
-            </section>
-
-        </main>
-    </div>
-
-  </div> <!-- #app -->
-
-  <script src="https://unpkg.com/vue@2.5.2/dist/vue.js"></script>
-  <script type="module" src="/navscroll.js"></script>
-  <!-- Older browsers load this file (and module-supporting -->
-  <!-- browsers know *not* to load this file). -->
-  <script nomodule src="/navscroll-legacy.js"></script>
-  <script type="text/javascript" src="assets/main.js"></script>
+    <script src="https://unpkg.com/vue@2.5.2/dist/vue.js"></script>
+    <script type="module" src="/dist/navscroll.js"></script>
+    <!-- Older browsers load this file (and module-supporting -->
+    <!-- browsers know *not* to load this file). -->
+    <script nomodule src="/dist/navscroll-legacy.js"></script>
+    <script type="text/javascript" src="assets/main.js"></script>
 </body>
 
 </html>
