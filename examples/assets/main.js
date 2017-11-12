@@ -84,24 +84,151 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+Vue.use(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a);
+
+let NavigationExample1 = {
+  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  template: `
+    <navscroll class="nav-scroll-items entries"
+      :container="container"
+      :item-selector="'.item'"
+      :active-class="activeClass"
+      :always-track="alwaysTrack"
+      :duration="duration"
+      :offset="offset"
+      :easing="easing"
+      :anchor="anchor"
+      :cancelable="cancelable"
+      :scrollX="scrollX"
+      :scrollY="scrollY">
+
+      <a
+        v-for="(entry,i) of entries" :key="i"
+        :href="'#'+entry+'-target'"
+        class="entry item">
+
+          <span class="entry-name">Go to Table {{entry}}</span>
+      </a>
+    </navscroll>
+  `
+};
+
+let NavigationExample2 = {
+  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  template: `
+    <nav class="nav-scroll-items entries"
+      v-navscroll:item="{
+        container, activeClass, alwaysTrack, duration,
+        offset, easing, anchor, cancelable, scrollX, scrollY
+      }">
+
+      <a
+        v-for="(entry,i) of entries" :key="i"
+        :href="'#'+entry+'-target'"
+        class="entry item">
+
+          <span class="entry-name">Go to Table {{entry}}</span>
+      </a>
+    </nav>
+  `
+};
+
+let NavigationExample3 = {
+  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  mounted() {
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, '.item', this.$props);
+  },
+  updated() {
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, '.item', this.$props);
+  },
+  beforeDestroy() {
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.unbindObserver(this.$props);
+  },
+  template: `
+    <nav id="nav-wrapper" ref="wrapper" class="nav-scroll-items entries">
+
+      <a
+        v-for="(entry,i) of entries" :key="i"
+        :href="'#'+entry+'-target'"
+        class="entry item"
+        v-navscroll="{
+          el: '#'+entry+'-target',
+          container, activeClass, offset, alwaysTrack, duration,
+          offset, easing, anchor, cancelable, scrollX, scrollY
+        }">
+
+          <span class="entry-name">Go to Table {{entry}}</span>
+      </a>
+    </nav>
+  `
+};
+
+function format(str) {
+  return str.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+    return '&#' + i.charCodeAt(0) + ';';
+  });
+}
+
 new Vue({
   el: '#app',
-  directives: {
-    'navscroll': __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a
+  components: {
+    'nav-ex1': NavigationExample1,
+    'nav-ex2': NavigationExample2,
+    'nav-ex3': NavigationExample3
   },
   data() {
     return {
-      entries: Array.from(new Array(10), (_, i) => i).map(i => `entry-${i}`),
-      activeClass: 'active-position'
+      sidebar: 'nav-ex1',
+      entriesArray: Array.from(new Array(4), (_, i) => i),
+      container: '#scrollable-content',
+      activeClass: 'active-position',
+      preClass: '',
+      codes: {
+        'nav-ex1': format(NavigationExample1.template),
+        'nav-ex2': format(NavigationExample2.template),
+        'nav-ex3': format(NavigationExample3.template)
+      },
+
+      alwaysTrack: false,
+      duration: 600,
+      offset: 60,
+      easing: '.5,0,.35,1',
+      anchor: false,
+      cancelable: true,
+      scrollAxis: 'y'
     };
   },
-  mounted() {
-    this.$refs.entries[0].classList.add(this.activeClass);
-    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initScrollHandler();
+  computed: {
+    entries() {
+      return Array.from(this.entriesArray, (_, i) => i).map(i => `entry-${i}`);
+    },
+
+    prop() {
+      return {
+        entries: this.entries,
+        container: '#scrollable-content',
+        activeClass: 'active-position',
+        alwaysTrack: this.alwaysTrack,
+        duration: this.duration,
+        offset: this.offset,
+        easing: this.easing,
+        anchor: this.anchor,
+        cancelable: this.cancelable,
+        scrollX: this.scrollAxis === 'x',
+        scrollY: this.scrollAxis === 'y'
+      };
+    },
+
+    code() {
+      return this.codes[this.sidebar];
+    }
   },
   methods: {
-    resetActiveClass(entryIndex) {
-      this.$refs.entries.forEach((e, i) => e.classList.remove(this.activeClass));
+    toggleOptions(ev) {
+      let optionsEl = this.$refs.options;
+      optionsEl.classList.toggle('visible');
+      optionsEl.style.bottom = 'initial';
+      optionsEl.style.top = `${ev.srcElement.getBoundingClientRect().top}px`;
     }
   }
 });
@@ -166,7 +293,7 @@ new Vue({
             n = 0;do {
           t += e.offsetTop || 0, n += e.offsetLeft || 0, e = e.offsetParent;
         } while (e);return { top: t, left: n };
-      }, cubicBezierArrayFrom: e => Array.isArray(e) ? e : "string" == typeof e ? o.a[e] ? o.a[e] : e.split(",") : o.a.ease };
+      }, cubicBezierArrayFrom: e => Array.isArray(e) ? e : "string" == typeof e ? o.a[e] ? o.a[e] : e.split(",").map(e => +e) : o.a.ease };
   }, function (e, t, n) {
     "use strict";
     Object.defineProperty(t, "__esModule", { value: !0 });var o = n(3),
@@ -176,70 +303,69 @@ new Vue({
   }, function (e, t, n) {
     "use strict";
     function o(e, t) {
-      let n;const o = Object(h.a)(),
-            r = t || u(g).binding.value;let a = p.a.$(r.container || o.container),
-          l = r.onScrollOffsetY || 2 * Math.round((window.innerHeight || document.documentElement.clientHeight) / 3),
-          c = r.onScrollOffsetX || 2 * Math.round((window.innerWidth || document.documentElement.clientWidth) / 3),
-          i = void 0 === r.activeClass ? o.activeClass : r.activeClass,
-          s = void 0 === r.scrollX ? o.scrollX : r.scrollX,
-          f = void 0 === r.scrollY ? o.scrollY : r.scrollY;a && (O.forEach(e => {
-        e.classList.remove(i);const t = e.hash ? e.hash.substr(1) : e.dataset.href,
-              o = document.getElementById(t);if (!o) return;let r = p.a.cumulativeOffset(o);f && a.scrollTop >= r.top - l && (n = e), s && a.scrollLeft >= r.left - c && (n = e);
-      }), n !== y && (y = n), n && n.classList.add(i));
-    }function r(e, t) {
-      u(e).binding = t;const n = t.value,
-            o = Object(h.a)();(m = t.arg) ? a(e, m = `.${m}`) : (void 0 === n.clickToScroll ? n.clickToScroll : o.clickToScroll) ? p.a.on(e, "click", s) : p.a.off(e, "click", s);
-    }function a(e, t, n) {
-      let o = u(g = e).binding;!o.arg && (o.arg = t), n && (o.value = Object.assign({}, n));const r = window.MutationObserver || window.WebKitMutationObserver;(b = new r(c)).observe(e, { childList: !0, subtree: !0 }), c(null, e, t);
-    }function l(e) {
-      e || (e = u(g).binding.value);let t = p.a.$(e.container || defaultOpts.container);if (!t) return console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${e.container || defaultOpts.container}" because it was not found in the DOM. Make sure it is in the DOM and then attach the \`onScroll\` handler yourself to it.`);u(t).binding.value = e, p.a.on(t, "scroll", o, { passive: !0 });
+      const n = Object.assign({}, t.value);n.isWrapper = !!t.arg, n.isWrapper && (n.itemSelector = `.${t.arg}`), r(e, n, n.isWrapper);
+    }function r(e, t, n) {
+      console.log("onBind", e, t, n);const o = Object(g.a)();t.isWrapper = n, n ? c(e, t.itemSelector, t) : (p(e).binding = t, (void 0 === t.clickToScroll ? t.clickToScroll : o.clickToScroll) ? b.a.on(e, "click", l) : b.a.off(e, "click", l));
+    }function a(e) {
+      let t = p(e).binding;Object(g.a)();console.log("onUnbind", e, t), t.isWrapper ? f(t) : u(e);
     }function c(e, t, n) {
-      (function (e) {
-        return "object" == typeof HTMLElement ? e instanceof HTMLElement : e && "object" == typeof e && null !== e && 1 === e.nodeType && "string" == typeof e.nodeName;
-      })(t) || (t = null);let o = p.a.$(t || g),
-          r = n || m;if (!o) return;O.forEach(e => d(e)), O = Array.prototype.slice.call(o.querySelectorAll(r));const a = u(o).binding,
-            l = a.value;if (void 0 === l.clickToScroll ? Object(h.a)().clickToScroll : l.clickToScroll) return O.forEach(e => {
-        let t = Object.assign({}, a);t.value = Object.assign({}, t.value, { el: e.hash }), u(e).binding = t, p.a.on(e, "click", s);
-      });O.forEach(e => {
-        p.a.off(e, "click", s);
-      });
+      function o(e) {
+        console.log("watcher", e, "with options", r, O, w), O && (console.log("navigationItems before", k, k.length), k.forEach(e => u(e)), k = [].slice.call(O.querySelectorAll(w)), console.log("navigationItems after", k, k.length), (void 0 === r.clickToScroll ? a.clickToScroll : r.clickToScroll) ? k.forEach(e => {
+          p(e).binding = Object.assign({}, r, { el: e.hash || e.dataset.href }), b.a.on(e, "click", l);
+        }) : k.forEach(e => {
+          b.a.off(e, "click", l);
+        }), s());
+      }console.log("initObserver", e, t, n);let r;const a = Object(g.a)();if (O = b.a.$(e), w = t || a.itemSelector, !O) return;if (r = p(O).binding = Object.assign({}, p(O).binding, n, { isWrapper: !0 }), !i(r)) return;const c = window.MutationObserver || window.WebKitMutationObserver;(y = new c(o)).observe(O, { childList: !0, subtree: !0 }), o();
     }function i(e) {
-      let t = u(e).binding;if (t.arg) {
-        O.forEach(e => {
-          p.a.off(e, "click", s), d(e);
-        }), O = [], m = void 0, b = void 0, g = void 0;let e = p.a.$(t.value.container || defaultOpts.container);if (!e) return;p.a.off(e, "scroll", o);
-      } else d(e), p.a.off(e, "click", s);
+      console.log("initScrollContainer", e);const t = Object(g.a)();let n = b.a.$(e.container || t.container);return n ? (p(n).binding = e, b.a.on(n, "scroll", s, { passive: !0 }), !0) : console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${e.container || t.container}" because it was not found. Make sure it is in the DOM and then call \`initObserver(wrapper, itemSelector, options)\` yourself with options.container properly set.`);
+    }function l(e) {
+      e.preventDefault();const t = p(this).binding || {},
+            n = Object(g.a)(),
+            o = event.currentTarget;if ((void 0 === t.stopPropagation ? n.stopPropagation : t.stopPropagation) && e.stopPropagation(), "string" == typeof t) return Object(h.a)(t, { clickedNavItem: o, navItems: k });t.clickedNavItem = o, t.navItems = k, t.trackingFn = s, Object(h.a)(t.el || t.element, t);
     }function s(e) {
-      e.preventDefault();const t = u(this).binding.value,
-            n = Object(h.a)(),
-            r = event.currentTarget,
-            a = void 0 === t.stopPropagation ? n.stopPropagation : t.stopPropagation,
-            l = t.onDone && "function" == typeof t.onDone ? t.onDone : n.onDone;if (a && e.stopPropagation(), "string" == typeof t) return Object(v.a)(t, { onDone: l, clickedNavItem: r, navItems: O });t.onDone = l, t.clickedNavItem = r, t.navItems = O, t.trackingFn = o, Object(v.a)(t.el || t.element, t);
+      let t;const n = Object(g.a)(),
+            o = p(O).binding;let r = b.a.$(o.container || n.container),
+          a = o.onScrollOffsetY || 2 * Math.round((window.innerHeight || document.documentElement.clientHeight) / 3),
+          c = o.onScrollOffsetX || 2 * Math.round((window.innerWidth || document.documentElement.clientWidth) / 3),
+          i = void 0 === o.activeClass ? n.activeClass : o.activeClass,
+          l = void 0 === o.scrollX ? n.scrollX : o.scrollX,
+          s = void 0 === o.scrollY ? n.scrollY : o.scrollY;r && (k.forEach(e => {
+        e.classList.remove(i);const n = e.hash ? e.hash.substr(1) : e.dataset.href,
+              o = document.getElementById(n);if (!o) return;let u = b.a.cumulativeOffset(o);s && r.scrollTop >= u.top - a && (t = e), l && r.scrollLeft >= u.left - c && (t = e);
+      }), t !== j && (j = t), t && t.classList.add(i));
     }function u(e) {
-      let t = f(e);return t || (w.push(t = { el: e, binding: {} }), t);
+      m(e), b.a.off(e, "click", l);
     }function f(e) {
-      for (let t = 0; t < w.length; ++t) if (w[t].el === e) return w[t];
+      console.log("unbindObserver", e), k.forEach(e => {
+        u(e);
+      }), k = [], w = void 0, m(O), O = void 0, y && (y.disconnect(), y = void 0), d(e);
     }function d(e) {
-      for (let t = 0; t < w.length; ++t) if (w[t].el === e) return w.splice(t, 1), !0;return !1;
-    }var v = n(4),
-        p = n(1),
-        h = n(0);let m,
-        b,
-        g,
+      const t = Object(g.a)();let n = b.a.$(e.container || t.container);n && (m(n), b.a.off(n, "scroll", s));
+    }function p(e) {
+      let t = v(e);return t || (S.push(t = { el: e, binding: {} }), t);
+    }function v(e) {
+      for (let t = 0; t < S.length; ++t) if (S[t].el === e) return S[t];
+    }function m(e) {
+      for (let t = 0; t < S.length; ++t) if (S[t].el === e) return S.splice(t, 1), !0;return !1;
+    }var h = n(4),
+        b = n(1),
+        g = n(0);let w,
         y,
-        w = [],
-        O = [];t.a = { scrollTo: v.a, onScroll: o, initScrollHandler: l, setDefaults: h.c, getDefaults: h.a, setNavigationItems: (e, t) => c(0, p.a.$(e), t), utils: p.a, bindings: w, navigationItems: O, bind(e, t) {
-        r(e, t);
-      }, unbind(e) {
-        i(e);
+        O,
+        j,
+        S = [],
+        k = [];t.a = { scrollTo: h.a, onScroll: s, initObserver: c, unbindObserver: f, setDefaults: g.c, getDefaults: g.a, bindings: S, utils: b.a, navigationWrapper: O, navigationItems: k, navItemsClassName: w, getVueComponentProps: g.b, bind(e, t) {
+        o(e, t);
       }, update(e, t) {
-        r(e, t);
-      }, props: Object(h.b)(), template: `\n    <nav class="navscroll-js">\n      <slot></slot>\n    </nav>\n  `, mounted() {
-        a(this.$el, this.itemSelector, this.$props), l(), o();
+        o(e, t);
+      }, unbind(e) {
+        a(e);
+      }, props: Object(g.b)(), template: `\n    <nav class="navscroll-js">\n      <slot></slot>\n    </nav>\n  `, mounted() {
+        r(this.$el, this.$props, !0);
       }, updated() {
-        c(0, p.a.$(this.$el), this.itemSelector);
+        r(b.a.$(this.$el), this.$props, !0);
       }, beforeDestroy() {
-        i(this.$el);
+        a(this.$el);
       } };
   }, function (e, t, n) {
     "use strict";
@@ -247,59 +373,59 @@ new Vue({
       e && (window.history.pushState ? window.history.pushState(null, null, e) : window.location.hash = e);
     }var r = n(5),
         a = n.n(r),
-        l = n(1),
-        c = n(0);const i = ["mousedown", "wheel", "DOMMouseScroll", "mousewheel", "keyup", "touchmove"],
+        c = n(1),
+        i = n(0);const l = ["mousedown", "wheel", "DOMMouseScroll", "mousewheel", "keyup", "touchmove"],
           s = (() => {
       function e(e) {
         let t = e.scrollTop;return "body" === e.tagName.toLowerCase() && (t = t || document.documentElement.scrollTop), t;
       }function t(e) {
         let t = e.scrollLeft;return "body" === e.tagName.toLowerCase() && (t = t || document.documentElement.scrollLeft), t;
       }function n(e) {
-        if (C) return r();P || (P = e), X = e - P, Y = Math.min(X / v, 1), Y = F(Y), s(d, $ + I * Y, A + N * Y), X < v ? window.AFRequestID = window.requestAnimationFrame(n) : r();
+        if (x) return r();P || (P = e), W = e - P, X = Math.min(W / p, 1), X = D(X), s(d, C + M * X, L + N * X), W < p ? window.AFRequestID = window.requestAnimationFrame(n) : r();
       }function r() {
-        C || s(d, M, D), P = !1, S && o(k), E && !L && u(j, T), C && g && g(x), !C && b && b(), l.a.off(d, i, q), setTimeout(() => {
-          l.a.on(d, "scroll", L, { passive: !0 });
+        x || s(d, I, $), P = !1, k && o(S), E && !A && u(j, T), x && g && g(F), b && b(), c.a.off(d, l, Y), setTimeout(() => {
+          c.a.on(d, "scroll", A, { passive: !0 });
         }, 100);
       }function s(e, t, n) {
-        w && (e.scrollTop = t), y && (e.scrollLeft = n), "body" === e.tagName.toLowerCase() && (w && (document.documentElement.scrollTop = t), y && (document.documentElement.scrollLeft = n));
+        y && (e.scrollTop = t), w && (e.scrollLeft = n), "body" === e.tagName.toLowerCase() && (y && (document.documentElement.scrollTop = t), w && (document.documentElement.scrollLeft = n));
       }function u(e, t) {
         t.forEach(e => {
           e.classList.remove(O);
         }), e && e.classList.add(O);
       }let f,
           d,
-          v,
           p,
-          h,
+          v,
           m,
+          h,
           b,
           g,
-          y,
           w,
+          y,
           O,
           j,
-          k,
           S,
+          k,
           T,
           E,
-          L,
           A,
-          D,
+          L,
           $,
-          M,
-          N,
-          I,
           C,
+          I,
+          N,
+          M,
           x,
           F,
+          D,
           P,
+          W,
           X,
-          Y,
-          q = e => {
-        m && (x = e, C = !0);
+          Y = e => {
+        h && (F = e, x = !0);
       };return function (o, r, s = {}) {
-        if ("object" == typeof r ? s = r : "number" == typeof r && (s.duration = r), !(f = l.a.$(o))) return console.warn(`[navscroll-js]: Trying to scroll to element "${o}" that is not on the page. Make sure it is set in the DOM.`);const P = Object(c.a)();if (!(d = l.a.$(s.container || P.container))) return console.warn(`[navscroll-js]: Scrolling container "${s.container || P.container}" is not present on the page.`);v = s.duration || P.duration, p = s.easing || P.easing, h = s.offset || P.offset, m = !1 !== s.cancelable, b = s.onDone || P.onDone, g = s.onCancel || P.onCancel, y = void 0 === s.scrollX ? P.scrollX : s.scrollX, w = void 0 === s.scrollY ? P.scrollY : s.scrollY, O = void 0 === s.activeClass ? P.activeClass : s.activeClass, j = s.clickedNavItem || P.clickedNavItem, k = j ? j.hash || j.dataset.href : s.hash || P.hash, S = void 0 === s.anchor ? P.anchor : s.anchor, T = s.navItems || P.navItems, E = void 0 === s.alwaysTrack ? P.alwaysTrack : s.alwaysTrack, L = "function" == typeof s.trackingFn ? s.trackingFn : P.trackingFn;let X = l.a.cumulativeOffset(f);return $ = e(d), M = X.top - d.offsetTop - h, A = t(d), D = X.left - d.offsetLeft - h, C = !1, I = M - $, N = D - A, p = l.a.cubicBezierArrayFrom(p), F = a.a.apply(a.a, p), I || N ? (E || (l.a.off(d, "scroll", L), window.cancelAnimationFrame(window.AFRequestID), u(j, T)), l.a.on(d, i, q, { passive: !0 }), window.requestAnimationFrame(n), () => {
-          x = null, C = !0;
+        if ("object" == typeof r ? s = r : "number" == typeof r && (s.duration = r), !(f = c.a.$(o))) return console.warn(`[navscroll-js]: Trying to scroll to element "${o}" that is not on the page. Make sure it is set in the DOM.`);const P = Object(i.a)();if (!(d = c.a.$(s.container || P.container))) return console.warn(`[navscroll-js]: Scrolling container "${s.container || P.container}" is not present on the page.`);p = s.duration || P.duration, v = s.easing || P.easing, m = s.offset || P.offset, h = !1 !== s.cancelable, b = s.onDone || P.onDone, g = s.onCancel || P.onCancel, w = void 0 === s.scrollX ? P.scrollX : s.scrollX, y = void 0 === s.scrollY ? P.scrollY : s.scrollY, O = void 0 === s.activeClass ? P.activeClass : s.activeClass, j = s.clickedNavItem || P.clickedNavItem, S = j ? j.hash || j.dataset.href : s.hash || P.hash, k = void 0 === s.anchor ? P.anchor : s.anchor, T = s.navItems || P.navItems, E = void 0 === s.alwaysTrack ? P.alwaysTrack : s.alwaysTrack, A = "function" == typeof s.trackingFn ? s.trackingFn : P.trackingFn;let W = c.a.cumulativeOffset(f);return C = e(d), I = W.top - d.offsetTop - m, L = t(d), $ = W.left - d.offsetLeft - m, x = !1, M = I - C, N = $ - L, v = c.a.cubicBezierArrayFrom(v), D = a.a.apply(a.a, v), M || N ? (E || (c.a.off(d, "scroll", A), window.cancelAnimationFrame(window.AFRequestID), u(j, T)), c.a.on(d, l, Y, { passive: !0 }), window.requestAnimationFrame(n), () => {
+          F = null, x = !0;
         }) : void 0;
       };
     })();t.a = s;
@@ -312,30 +438,30 @@ new Vue({
       return 3 * e;
     }function a(e, t, a) {
       return ((n(t, a) * e + o(t, a)) * e + r(t)) * e;
-    }function l(e, t, a) {
+    }function c(e, t, a) {
       return 3 * n(t, a) * e * e + 2 * o(t, a) * e + r(t);
-    }function c(e, t, n, o, r) {
-      var l,
-          c,
-          i = 0;do {
-        (l = a(c = t + (n - t) / 2, o, r) - e) > 0 ? n = c : t = c;
-      } while (Math.abs(l) > f && ++i < d);return c;
-    }function i(e, t, n, o) {
+    }function i(e, t, n, o, r) {
+      var c,
+          i,
+          l = 0;do {
+        (c = a(i = t + (n - t) / 2, o, r) - e) > 0 ? n = i : t = i;
+      } while (Math.abs(c) > f && ++l < d);return i;
+    }function l(e, t, n, o) {
       for (var r = 0; r < s; ++r) {
-        var c = l(t, n, o);if (0 === c) return t;t -= (a(t, n, o) - e) / c;
+        var i = c(t, n, o);if (0 === i) return t;t -= (a(t, n, o) - e) / i;
       }return t;
     }var s = 4,
         u = .001,
         f = 1e-7,
         d = 10,
-        v = 11,
-        p = 1 / (v - 1),
-        h = "function" == typeof Float32Array;e.exports = function (e, t, n, o) {
+        p = 11,
+        v = 1 / (p - 1),
+        m = "function" == typeof Float32Array;e.exports = function (e, t, n, o) {
       function r(t) {
-        for (var o = 0, r = 1, a = v - 1; r !== a && s[r] <= t; ++r) o += p;var f = o + (t - s[--r]) / (s[r + 1] - s[r]) * p,
-            d = l(f, e, n);return d >= u ? i(t, f, e, n) : 0 === d ? f : c(t, o, o + p, e, n);
-      }if (!(0 <= e && e <= 1 && 0 <= n && n <= 1)) throw new Error("bezier x values must be in [0, 1] range");var s = h ? new Float32Array(v) : new Array(v);if (e !== t || n !== o) for (var f = 0; f < v; ++f) s[f] = a(f * p, e, n);return function (l) {
-        return e === t && n === o ? l : 0 === l ? 0 : 1 === l ? 1 : a(r(l), t, o);
+        for (var o = 0, r = 1, a = p - 1; r !== a && s[r] <= t; ++r) o += v;var f = o + (t - s[--r]) / (s[r + 1] - s[r]) * v,
+            d = c(f, e, n);return d >= u ? l(t, f, e, n) : 0 === d ? f : i(t, o, o + v, e, n);
+      }if (!(0 <= e && e <= 1 && 0 <= n && n <= 1)) throw new Error("bezier x values must be in [0, 1] range");var s = m ? new Float32Array(p) : new Array(p);if (e !== t || n !== o) for (var f = 0; f < p; ++f) s[f] = a(f * v, e, n);return function (c) {
+        return e === t && n === o ? c : 0 === c ? 0 : 1 === c ? 1 : a(r(c), t, o);
       };
     };
   }, function (e, t, n) {
