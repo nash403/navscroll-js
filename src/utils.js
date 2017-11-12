@@ -57,7 +57,7 @@ export default {
       if (Array.isArray(easing)) return easing;
       if (typeof easing === "string") {
         if (easings[easing]) return easings[easing]
-        return easing.split(',')
+        return easing.split(',').map(v=>+v)
       }
       return easings['ease']
     }

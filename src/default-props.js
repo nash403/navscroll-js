@@ -37,7 +37,7 @@ let defaults = {
   offset: 0,
   /**
   * Threshold amount of space between left side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  * highlight as the current one (for the onScroll handler).
   *
   * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
   * @type {Number}
@@ -45,7 +45,7 @@ let defaults = {
   onScrollOffsetX: undefined,
   /**
   * Threshold amount of space between top side of screen and the section to
-  * highlight (for the onScroll handler) from which the section will be marked as the current one.
+  * highlight as the current one (for the onScroll handler).
   *
   * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
   * @type {Number}
@@ -62,7 +62,7 @@ let defaults = {
   cancelable: true,
   /**
   * Callback called when scrolling is finished.
-  * Also called when the scroll animation is cancelled.
+  * Also called when the scroll animation is cancelled (right after the onCancel callback).
   *
   * @default null
   * @type {Function}
@@ -92,8 +92,9 @@ let defaults = {
   /**
   * Hash of the target section.
   * It will be applyed to window.location.hash if the `anchor` option is set to true.
-  * If the `clickedNavItem` option is set and the element has a hash it will have priority
-  * to this option.
+  *
+  * NOTE: If the clicked item or if the `clickedNavItem` option is set and the element has
+  * a href or a data-href attribute, this attribute it will have priority to this option.
   *
   * @default null
   * @type {String}
@@ -150,14 +151,14 @@ let defaults = {
   */
   alwaysTrack: false,
   /**
-  * Class that will be applied in the menu item.
+  * Class that will be applied to the menu item after the scroll animation.
   *
   * @default  'active'
   * @type {String}
   */
   activeClass: 'active',
   /**
-  * Class that will be used to recognize the click-to-scroll navigation items
+  * Selector that will be used to recognize the navigation items inside the navigation wrapper.
   *
   * @default  'scroll-item'
   * @type {String}
