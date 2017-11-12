@@ -115,7 +115,7 @@ const scroller = () => {
           updateClassName(clickedNavItem, navItems)
         }
         if (abort && onCancel) onCancel(abortEv);
-        if (!abort && onDone) onDone();
+        if (onDone) onDone();
         _.off(container, abortEvents, abortFn);
         setTimeout(() => {
           // workaround to avoid the tracking function to be called right after we re-added it to the container
