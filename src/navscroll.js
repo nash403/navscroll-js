@@ -140,7 +140,8 @@ function initObserver(wrapper, itemSelector, options) {
 
     if (binding.clickToScroll === undefined ? defaultOpts.clickToScroll : binding.clickToScroll) {
       navigationItems.forEach((item) => {
-        getBinding(item).binding =  Object.assign({}, binding, { el: item.hash || item.dataset.href })
+        let targetEl = binding.el || binding.element || item.hash || item.dataset.href;
+        getBinding(item).binding =  Object.assign({}, binding, { el: targetEl })
         _.on(item, 'click', handleClick);
       });
     } else {

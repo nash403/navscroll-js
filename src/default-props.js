@@ -8,6 +8,30 @@ let defaults = {
   */
   container: 'body',
   /**
+  * Selector that will be used to recognize the navigation items inside the navigation wrapper.
+  *
+  * @default  'scroll-item'
+  * @type {String}
+  */
+  itemSelector: '.scroll-item',
+  /**
+  * Class that will be applied to the menu item after the scroll animation.
+  *
+  * @default  'active'
+  * @type {String}
+  */
+  activeClass: 'active',
+  /**
+   * The target element/selector for the scrollTo method. Only used when registering
+   * click handlers on the nav items. If the option is not set, registration will use
+   * the href or the dataset.href of the registered nav item.
+   * Alias: 'element'
+   *
+   * @default null
+   * @type {String|HTMLElement}
+   */
+  el: null,
+  /**
   * The duration of the scroll animation
   *
   * @default 600
@@ -17,16 +41,30 @@ let defaults = {
   /**
   * Your custom easing value for the click to scroll functionality.
   * It must be:
-  * - a string with 4 values separated by commas in a cubic bezier format.
+  * - a string with 4 values separated by commas in a cubic bezier format (ex: '.5,0,.35,1').
   * - a string value among one of the following values:
   *       'ease', 'linear', 'ease-in', 'ease-out' or 'ease-in-out'
-  * - an array of 4 values in a cubic bezier format
+  * - an array of 4 values in a cubic bezier format (ex: [0.5, 0, 0.35, 1]).
   *
   * @example ".5,0,.35,1"
   * @default 'ease'
   * @type {String|Array}
   */
   easing: "ease",
+  /**
+  * Whether to scroll on the X axis
+  *
+  * @default false
+  * @type {Boolean}
+  */
+  scrollX: false,
+  /**
+  * Whether to scroll on the Y axis
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  scrollY: true,
   /**
   * Amount of space between top / left side of screen and the section to
   * highlight.
@@ -52,6 +90,19 @@ let defaults = {
   */
   onScrollOffsetY: undefined,
   /**
+  * Defines whether to track section changes when
+  * clicking an item to scroll to its section. If set to true,
+  * the scrolling listener will always keep track and change the active class
+  * to the current section while scrolling, if false, the scrolling handler will be
+  * removed temporarily from the scrolling container and the active class will be
+  * immediately applied to the clicked menu item, ignoring the passed sections
+  * until the scrolling is over.
+  *
+  * @default false
+  * @type {Boolean}
+  */
+  alwaysTrack: false,
+  /**
   * Allow the scroll animation to be cancelled.
   * In that case, events like 'keyup' or 'touchmove' will cancel the animation
   * and scroll the content immediately to the target.
@@ -60,6 +111,13 @@ let defaults = {
   * @type {Boolean}
   */
   cancelable: true,
+  /**
+  * Whether to stop the propagation of the click event on a menu item
+  *
+  * @default true
+  * @type {Boolean}
+  */
+  stopPropagation: true,
   /**
   * Callback called when scrolling is finished.
   * Also called when the scroll animation is cancelled (right after the onCancel callback).
@@ -75,13 +133,6 @@ let defaults = {
   * @type {Function}
   */
   onCancel: null,
-  /**
-  * Whether to stop the propagation of the click event on a menu item
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  stopPropagation: true,
   /**
   * Whether to update window.location.hash when a link menu item with a href is clicked
   *
@@ -100,20 +151,6 @@ let defaults = {
   * @type {String}
   */
   hash: null,
-  /**
-  * Whether to scroll on the X axis
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  scrollX: false,
-  /**
-  * Whether to scroll on the Y axis
-  *
-  * @default true
-  * @type {Boolean}
-  */
-  scrollY: true,
   /**
   * Enables/disables the scrolling when clicking in a menu item.
   * Disable if you'd like to handle the scrolling by your own.
@@ -137,33 +174,6 @@ let defaults = {
   * @type {Array<HTMLElement>}
   */
   navItems: [],
-  /**
-  * Defines whether to track section changes when
-  * clicking an item to scroll to its section. If set to true,
-  * the scrolling listener will always keep track and change the active class
-  * to the current section while scrolling, if false, the scrolling handler will be
-  * removed temporarily from the scrolling container and the active class will be
-  * immediately applied to the clicked menu item, ignoring the passed sections
-  * until the scrolling is over.
-  *
-  * @default false
-  * @type {Boolean}
-  */
-  alwaysTrack: false,
-  /**
-  * Class that will be applied to the menu item after the scroll animation.
-  *
-  * @default  'active'
-  * @type {String}
-  */
-  activeClass: 'active',
-  /**
-  * Selector that will be used to recognize the navigation items inside the navigation wrapper.
-  *
-  * @default  'scroll-item'
-  * @type {String}
-  */
-  itemSelector: '.scroll-item',
 };
 
 
