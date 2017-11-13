@@ -70,7 +70,6 @@ function bindDirective(el, binding) {
 }
 
 function onBind(el, options, isWrapper) {
-  console.log('onBind', el, options, isWrapper)
   const defaultOpts = defaults()
   options.isWrapper = isWrapper;
 
@@ -91,7 +90,6 @@ function onBind(el, options, isWrapper) {
 function onUnbind(el) {
   let options = getBinding(el).binding
   const defaultOpts = defaults();
-  console.log('onUnbind', el, options)
 
   if (options.isWrapper) {
     unbindObserver(options)
@@ -101,7 +99,6 @@ function onUnbind(el) {
 }
 
 function initObserver(wrapper, itemSelector, options) {
-  console.log('initObserver', wrapper, itemSelector, options)
   let binding;
   const defaultOpts = defaults();
 
@@ -129,14 +126,11 @@ function initObserver(wrapper, itemSelector, options) {
 
   function watcher(DOMMutations) {
     // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object (see addedNodes & removedNodes properties)
-    console.log('watcher', DOMMutations, "with options", binding, elementWrapper,navItemsClassName)
 
     if (!elementWrapper) return;
 
-    console.log('navigationItems before', navigationItems, navigationItems.length)
     navigationItems.forEach(item => unbindElement(item))
     navigationItems = [].slice.call(elementWrapper.querySelectorAll(navItemsClassName));
-    console.log('navigationItems after', navigationItems, navigationItems.length)
 
     if (binding.clickToScroll === undefined ? defaultOpts.clickToScroll : binding.clickToScroll) {
       navigationItems.forEach((item) => {
@@ -155,7 +149,6 @@ function initObserver(wrapper, itemSelector, options) {
 }
 
 function initScrollContainer(options) {
-  console.log('initScrollContainer', options)
   const defaultOpts = defaults();
   let container = _.$(options.container || defaultOpts.container);
   if (!container) {
@@ -238,7 +231,6 @@ function unbindElement(el) {
 }
 
 function unbindObserver(options) {
-  console.log('unbindObserver', options)
   navigationItems.forEach(item => {
     unbindElement(item)
   })

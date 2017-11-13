@@ -304,19 +304,19 @@ new Vue({
     function o(e, t) {
       const n = Object.assign({}, t.value);n.isWrapper = !!t.arg, n.isWrapper && (n.itemSelector = `.${t.arg}`), r(e, n, n.isWrapper);
     }function r(e, t, n) {
-      console.log("onBind", e, t, n);const o = Object(g.a)();t.isWrapper = n, n ? c(e, t.itemSelector, t) : (p(e).binding = t, (void 0 === t.clickToScroll ? t.clickToScroll : o.clickToScroll) ? h.a.on(e, "click", l) : h.a.off(e, "click", l));
+      const o = Object(g.a)();t.isWrapper = n, n ? c(e, t.itemSelector, t) : (p(e).binding = t, (void 0 === t.clickToScroll ? t.clickToScroll : o.clickToScroll) ? h.a.on(e, "click", l) : h.a.off(e, "click", l));
     }function a(e) {
-      let t = p(e).binding;Object(g.a)();console.log("onUnbind", e, t), t.isWrapper ? f(t) : u(e);
+      let t = p(e).binding;Object(g.a)();t.isWrapper ? f(t) : u(e);
     }function c(e, t, n) {
       function o(e) {
-        console.log("watcher", e, "with options", r, O, w), O && (console.log("navigationItems before", k, k.length), k.forEach(e => u(e)), k = [].slice.call(O.querySelectorAll(w)), console.log("navigationItems after", k, k.length), (void 0 === r.clickToScroll ? a.clickToScroll : r.clickToScroll) ? k.forEach(e => {
+        O && (k.forEach(e => u(e)), k = [].slice.call(O.querySelectorAll(w)), (void 0 === r.clickToScroll ? a.clickToScroll : r.clickToScroll) ? k.forEach(e => {
           let t = r.el || r.element || e.hash || e.dataset.href;p(e).binding = Object.assign({}, r, { el: t }), h.a.on(e, "click", l);
         }) : k.forEach(e => {
           h.a.off(e, "click", l);
         }), s());
-      }console.log("initObserver", e, t, n);let r;const a = Object(g.a)();if (O = h.a.$(e), w = t || a.itemSelector, !O) return;if (r = p(O).binding = Object.assign({}, p(O).binding, n, { isWrapper: !0 }), !i(r)) return;const c = window.MutationObserver || window.WebKitMutationObserver;(y = new c(o)).observe(O, { childList: !0, subtree: !0 }), o();
+      }let r;const a = Object(g.a)();if (O = h.a.$(e), w = t || a.itemSelector, !O) return;if (r = p(O).binding = Object.assign({}, p(O).binding, n, { isWrapper: !0 }), !i(r)) return;const c = window.MutationObserver || window.WebKitMutationObserver;(y = new c(o)).observe(O, { childList: !0, subtree: !0 }), o();
     }function i(e) {
-      console.log("initScrollContainer", e);const t = Object(g.a)();let n = h.a.$(e.container || t.container);return n ? (p(n).binding = e, h.a.on(n, "scroll", s, { passive: !0 }), !0) : console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${e.container || t.container}" because it was not found. Make sure it is in the DOM and then call \`initObserver(wrapper, itemSelector, options)\` yourself with options.container properly set.`);
+      const t = Object(g.a)();let n = h.a.$(e.container || t.container);return n ? (p(n).binding = e, h.a.on(n, "scroll", s, { passive: !0 }), !0) : console.warn(`[navscroll-js]: Could not attach scroll handler to the container "${e.container || t.container}" because it was not found. Make sure it is in the DOM and then call \`initObserver(wrapper, itemSelector, options)\` yourself with options.container properly set.`);
     }function l(e) {
       e.preventDefault();const t = p(this).binding || {},
             n = Object(g.a)(),
@@ -335,7 +335,7 @@ new Vue({
     }function u(e) {
       m(e), h.a.off(e, "click", l);
     }function f(e) {
-      console.log("unbindObserver", e), k.forEach(e => {
+      k.forEach(e => {
         u(e);
       }), k = [], w = void 0, m(O), O = void 0, y && (y.disconnect(), y = void 0), d(e);
     }function d(e) {
