@@ -320,7 +320,7 @@ new Vue({
     }function l(e) {
       e.preventDefault();const t = p(this).binding || {},
             n = Object(g.a)(),
-            o = event.currentTarget;if ((void 0 === t.stopPropagation ? n.stopPropagation : t.stopPropagation) && e.stopPropagation(), "string" == typeof t) return Object(b.a)(t, { clickedNavItem: o, navItems: k });t.clickedNavItem = o, t.navItems = k, t.trackingFn = s, Object(b.a)(t.el || t.element, t);
+            o = e.currentTarget;if ((void 0 === t.stopPropagation ? n.stopPropagation : t.stopPropagation) && e.stopPropagation(), "string" == typeof t) return Object(b.a)(t, { clickedNavItem: o, navItems: k });t.clickedNavItem = o, t.navItems = k, t.trackingFn = s, Object(b.a)(t.el || t.element, t);
     }function s(e) {
       let t;const n = Object(g.a)(),
             o = p(O).binding;let r = h.a.$(o.container || n.container),

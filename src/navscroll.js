@@ -179,7 +179,7 @@ function handleClick(e) {
   const options = getBinding(this).binding || {};
   const defaultOpts = defaults();
 
-  const clickedElement = event.currentTarget;
+  const clickedElement = e.currentTarget;
   const stop =
     options.stopPropagation === undefined
       ? defaultOpts.stopPropagation
