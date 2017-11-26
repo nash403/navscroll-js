@@ -87,7 +87,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Vue.use(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a);
 
 let NavigationExample1 = {
-  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  props: ["entries", ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
   template: `
     <navscroll class="nav-scroll-items entries"
       :container="container"
@@ -114,7 +114,7 @@ let NavigationExample1 = {
 };
 
 let NavigationExample2 = {
-  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  props: ["entries", ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
   template: `
     <nav class="nav-scroll-items entries"
       v-navscroll:item="{
@@ -134,12 +134,12 @@ let NavigationExample2 = {
 };
 
 let NavigationExample3 = {
-  props: ['entries', ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
+  props: ["entries", ...Object.keys(__WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.getDefaults())],
   mounted() {
-    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, '.item', this.$props);
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, ".item", this.$props);
   },
   updated() {
-    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, '.item', this.$props);
+    __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.initObserver(this.$refs.wrapper, ".item", this.$props);
   },
   beforeDestroy() {
     __WEBPACK_IMPORTED_MODULE_1__dist_navscroll___default.a.unbindObserver(this.$props);
@@ -164,37 +164,37 @@ let NavigationExample3 = {
 
 function format(str) {
   return str.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
-    return '&#' + i.charCodeAt(0) + ';';
+    return "&#" + i.charCodeAt(0) + ";";
   });
 }
 
 new Vue({
-  el: '#app',
+  el: "#app",
   components: {
-    'nav-ex1': NavigationExample1,
-    'nav-ex2': NavigationExample2,
-    'nav-ex3': NavigationExample3
+    "nav-ex1": NavigationExample1,
+    "nav-ex2": NavigationExample2,
+    "nav-ex3": NavigationExample3
   },
   data() {
     return {
-      sidebar: 'nav-ex1',
+      sidebar: "nav-ex1",
       entriesArray: Array.from(new Array(4), (_, i) => i),
-      container: '#scrollable-content',
-      activeClass: 'active-position',
-      preClass: '',
+      container: "#scrollable-content",
+      activeClass: "active-position",
+      preClass: "",
       codes: {
-        'nav-ex1': format(NavigationExample1.template),
-        'nav-ex2': format(NavigationExample2.template),
-        'nav-ex3': format(NavigationExample3.template)
+        "nav-ex1": format(NavigationExample1.template),
+        "nav-ex2": format(NavigationExample2.template),
+        "nav-ex3": format(NavigationExample3.template)
       },
 
       alwaysTrack: false,
       duration: 600,
       offset: 60,
-      easing: '.5,0,.35,1',
+      easing: ".5,0,.35,1",
       anchor: false,
       cancelable: true,
-      scrollAxis: 'y'
+      scrollAxis: "y"
     };
   },
   computed: {
@@ -205,16 +205,16 @@ new Vue({
     prop() {
       return {
         entries: this.entries,
-        container: '#scrollable-content',
-        activeClass: 'active-position',
+        container: "#scrollable-content",
+        activeClass: "active-position",
         alwaysTrack: this.alwaysTrack,
         duration: this.duration,
         offset: this.offset,
         easing: this.easing,
         anchor: this.anchor,
         cancelable: this.cancelable,
-        scrollX: this.scrollAxis === 'x',
-        scrollY: this.scrollAxis === 'y'
+        scrollX: this.scrollAxis === "x",
+        scrollY: this.scrollAxis === "y"
       };
     },
 
@@ -225,8 +225,8 @@ new Vue({
   methods: {
     toggleOptions(ev) {
       let optionsEl = this.$refs.options;
-      optionsEl.classList.toggle('visible');
-      optionsEl.style.bottom = 'initial';
+      optionsEl.classList.toggle("visible");
+      optionsEl.style.bottom = "initial";
       optionsEl.style.top = `${ev.srcElement.getBoundingClientRect().top}px`;
     }
   }

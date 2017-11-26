@@ -1,9 +1,6 @@
 import scrollTo from "./scrollTo";
 import _ from "./utils";
-import defaults, {
-  setDefaults,
-  getVueComponentProps
-} from "./default-props";
+import defaults, { setDefaults, getVueComponentProps } from "./default-props";
 
 let bindings = []; // store binding data
 
@@ -33,13 +30,13 @@ export default {
   // `binding.value` will be the options object.
   // Presence of the argument tells whether the binded element is a wrapper or a clickable item
   bind(el, binding) {
-    bindDirective(el, binding)
+    bindDirective(el, binding);
   },
   update(el, binding) {
-    bindDirective(el, binding)
+    bindDirective(el, binding);
   },
   unbind(el) {
-    onUnbind(el)
+    onUnbind(el);
   },
 
   /**
@@ -52,34 +49,38 @@ export default {
     </nav>
   `,
   mounted() {
-    onBind(this.$el, this.$props, true)
+    onBind(this.$el, this.$props, true);
   },
   updated() {
-    onBind(_.$(this.$el), this.$props, true)
+    onBind(_.$(this.$el), this.$props, true);
   },
   beforeDestroy() {
-    onUnbind(this.$el)
+    onUnbind(this.$el);
   }
 };
 
 function bindDirective(el, binding) {
-  const options = Object.assign({}, binding.value)
-  options.isWrapper = !!binding.arg
-  if (options.isWrapper) options.itemSelector = `.${binding.arg}`
-  onBind(el, options, options.isWrapper)
+  const options = Object.assign({}, binding.value);
+  options.isWrapper = !!binding.arg;
+  if (options.isWrapper) options.itemSelector = `.${binding.arg}`;
+  onBind(el, options, options.isWrapper);
 }
 
 function onBind(el, options, isWrapper) {
-  const defaultOpts = defaults()
+  const defaultOpts = defaults();
   options.isWrapper = isWrapper;
 
   if (isWrapper) {
     // wrapper mode
-    initObserver(el, options.itemSelector, options)
+    initObserver(el, options.itemSelector, options);
   } else {
     // item mode
     getBinding(el).binding = options;
-    if (options.clickToScroll === undefined ? options.clickToScroll : defaultOpts.clickToScroll) {
+    if (
+      options.clickToScroll === undefined
+        ? options.clickToScroll
+        : defaultOpts.clickToScroll
+    ) {
       _.on(el, "click", handleClick);
     } else {
       _.off(el, "click", handleClick);
@@ -88,11 +89,11 @@ function onBind(el, options, isWrapper) {
 }
 
 function onUnbind(el) {
-  let options = getBinding(el).binding
+  let options = getBinding(el).binding;
   const defaultOpts = defaults();
 
   if (options.isWrapper) {
-    unbindObserver(options)
+    unbindObserver(options);
   } else {
     unbindElement(el);
   }
@@ -102,19 +103,21 @@ function initObserver(wrapper, itemSelector, options) {
   let binding;
   const defaultOpts = defaults();
 
-  elementWrapper = _.$(wrapper)
+  elementWrapper = _.$(wrapper);
   navItemsClassName = itemSelector || defaultOpts.itemSelector;
   if (!elementWrapper) return;
 
-  binding = getBinding(elementWrapper).binding = Object.assign({},
+  binding = getBinding(elementWrapper).binding = Object.assign(
+    {},
     getBinding(elementWrapper).binding,
     options,
-    {isWrapper:true}
+    { isWrapper: true }
   );
 
-  if (!initScrollContainer(binding)) return ;
+  if (!initScrollContainer(binding)) return;
 
-  const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+  const MutationObserver =
+    window.MutationObserver || window.WebKitMutationObserver;
   // Watch for DOM changes in the element wrapper
   observer = new MutationObserver(watcher);
   observer.observe(elementWrapper, {
@@ -123,28 +126,34 @@ function initObserver(wrapper, itemSelector, options) {
   });
   watcher();
 
-
   function watcher(DOMMutations) {
     // TODO optimize this fn and only perfom operations based on what changed in the DOMMutations object (see addedNodes & removedNodes properties)
 
     if (!elementWrapper) return;
 
-    navigationItems.forEach(item => unbindElement(item))
-    navigationItems = [].slice.call(elementWrapper.querySelectorAll(navItemsClassName));
+    navigationItems.forEach(item => unbindElement(item));
+    navigationItems = [].slice.call(
+      elementWrapper.querySelectorAll(navItemsClassName)
+    );
 
-    if (binding.clickToScroll === undefined ? defaultOpts.clickToScroll : binding.clickToScroll) {
-      navigationItems.forEach((item) => {
-        let targetEl = binding.el || binding.element || item.hash || item.dataset.href;
-        getBinding(item).binding =  Object.assign({}, binding, { el: targetEl })
-        _.on(item, 'click', handleClick);
+    if (
+      binding.clickToScroll === undefined
+        ? defaultOpts.clickToScroll
+        : binding.clickToScroll
+    ) {
+      navigationItems.forEach(item => {
+        let targetEl =
+          binding.el || binding.element || item.hash || item.dataset.href;
+        getBinding(item).binding = Object.assign({}, binding, { el: targetEl });
+        _.on(item, "click", handleClick);
       });
     } else {
-      navigationItems.forEach((item) => {
-        _.off(item, 'click', handleClick);
+      navigationItems.forEach(item => {
+        _.off(item, "click", handleClick);
       });
     }
 
-    onScroll()
+    onScroll();
   }
 }
 
@@ -153,13 +162,14 @@ function initScrollContainer(options) {
   let container = _.$(options.container || defaultOpts.container);
   if (!container) {
     return console.warn(
-      `[navscroll-js]: Could not attach scroll handler to the container "${options.container || defaultOpts.container}" because it was not found. Make sure it is in the DOM and then call \`initObserver(wrapper, itemSelector, options)\` yourself with options.container properly set.`
+      `[navscroll-js]: Could not attach scroll handler to the container "${options.container ||
+        defaultOpts.container}" because it was not found. Make sure it is in the DOM and then call \`initObserver(wrapper, itemSelector, options)\` yourself with options.container properly set.`
     );
   }
-  getBinding(container).binding = options
-  _.on(container, 'scroll', onScroll, {
+  getBinding(container).binding = options;
+  _.on(container, "scroll", onScroll, {
     passive: true
-  })
+  });
   return true;
 }
 
@@ -167,12 +177,15 @@ function handleClick(e) {
   e.preventDefault();
 
   const options = getBinding(this).binding || {};
-  const defaultOpts = defaults()
+  const defaultOpts = defaults();
 
   const clickedElement = event.currentTarget;
-  const stop = (options.stopPropagation === undefined) ? defaultOpts.stopPropagation : options.stopPropagation;
+  const stop =
+    options.stopPropagation === undefined
+      ? defaultOpts.stopPropagation
+      : options.stopPropagation;
 
-  if (stop) e.stopPropagation()
+  if (stop) e.stopPropagation();
 
   if (typeof options === "string") {
     return scrollTo(options, {
@@ -181,9 +194,9 @@ function handleClick(e) {
     });
   }
 
-  options.clickedNavItem = clickedElement
-  options.navItems = navigationItems
-  options.trackingFn = onScroll
+  options.clickedNavItem = clickedElement;
+  options.navItems = navigationItems;
+  options.trackingFn = onScroll;
   scrollTo(options.el || options.element, options);
 }
 
@@ -194,18 +207,31 @@ export function onScroll(event) {
   const options = getBinding(elementWrapper).binding;
 
   let container = _.$(options.container || defaultOpts.container);
-  let offsetY = options.onScrollOffsetY || Math.round((window.innerHeight || document.documentElement.clientHeight) / 3) * 2;
-  let offsetX = options.onScrollOffsetX || Math.round((window.innerWidth || document.documentElement.clientWidth) / 3) * 2;
-  let activeClass = (options.activeClass === undefined) ? defaultOpts.activeClass : options.activeClass;
+  let offsetY =
+    options.onScrollOffsetY ||
+    Math.round(
+      (window.innerHeight || document.documentElement.clientHeight) / 3
+    ) * 2;
+  let offsetX =
+    options.onScrollOffsetX ||
+    Math.round(
+      (window.innerWidth || document.documentElement.clientWidth) / 3
+    ) * 2;
+  let activeClass =
+    options.activeClass === undefined
+      ? defaultOpts.activeClass
+      : options.activeClass;
   let x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
   let y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
 
   if (!container) return;
 
-  navigationItems.forEach((item) => {
+  navigationItems.forEach(item => {
     item.classList.remove(activeClass);
 
-    const targetDiscriminator = item.hash ? item.hash.substr(1) : item.dataset.href
+    const targetDiscriminator = item.hash
+      ? item.hash.substr(1)
+      : item.dataset.href;
     const targetElement = document.getElementById(targetDiscriminator);
     if (!targetElement) return;
 
@@ -232,17 +258,17 @@ function unbindElement(el) {
 
 function unbindObserver(options) {
   navigationItems.forEach(item => {
-    unbindElement(item)
-  })
-  navigationItems = []
+    unbindElement(item);
+  });
+  navigationItems = [];
   navItemsClassName = undefined;
-  deleteBinding(elementWrapper)
+  deleteBinding(elementWrapper);
   elementWrapper = undefined;
   if (observer) {
-    observer.disconnect()
+    observer.disconnect();
     observer = undefined;
   }
-  unbindScrollContainer(options)
+  unbindScrollContainer(options);
 }
 
 function unbindScrollContainer(options) {
@@ -250,7 +276,7 @@ function unbindScrollContainer(options) {
   let container = _.$(options.container || defaultOpts.container);
   if (container) {
     deleteBinding(container);
-    _.off(container, 'scroll', onScroll)
+    _.off(container, "scroll", onScroll);
   }
 }
 
@@ -263,10 +289,10 @@ function getBinding(el) {
 
   // register new binding
   bindings.push(
-    binding = {
+    (binding = {
       el: el,
       binding: {}
-    }
+    })
   );
 
   return binding;

@@ -1,18 +1,18 @@
 import NavScroll from "./navscroll";
-import defaults, {setDefaults} from "./default-props";
+import defaults, { setDefaults } from "./default-props";
 
 const install = function(Vue, options) {
-    if (options) setDefaults(options);
-    Vue.directive("navscroll", NavScroll);
-    Vue.component("navscroll", NavScroll);
-    Vue.prototype.$scrollTo = NavScroll.scrollTo;
+  if (options) setDefaults(options);
+  Vue.directive("navscroll", NavScroll);
+  Vue.component("navscroll", NavScroll);
+  Vue.prototype.$scrollTo = NavScroll.scrollTo;
 };
 
 NavScroll.install = install;
 
 if (typeof window !== "undefined" && window.Vue) {
-    window.NavScroll = NavScroll;
-    Vue.use(install);
+  window.NavScroll = NavScroll;
+  Vue.use(install);
 }
 
 export default NavScroll;
