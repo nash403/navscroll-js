@@ -155,9 +155,7 @@ const scroller = () => {
 
     if (!targetElement) {
       return console.warn(
-        `[navscroll-js]: Trying to scroll to element "${
-          target
-        }" that is not on the page. Make sure it is set in the DOM.`
+        `[navscroll-js]: Trying to scroll to element "${target}" that is not on the page. Make sure it is set in the DOM.`
       );
     }
 

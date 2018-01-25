@@ -1,6 +1,6 @@
 import "./main.scss";
 
-import NavScroll from "../../dist/navscroll";
+import NavScroll from "../../";
 
 Vue.use(NavScroll);
 
