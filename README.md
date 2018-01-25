@@ -9,23 +9,26 @@
 This package is available on npm.
 
 Using npm:
+
 ```bash
 npm install --save navscroll
 ```
 
 Using yarn:
+
 ```bash
 yarn add navscroll
 ```
 
 Directly include it in html:
+
 ```html
 <!-- Browsers with ES module support load this file. -->
-<script type="module" src="node_modules/navscroll/navscroll.js"></script>
+<script type="module" src="node_modules/navscroll/dist/navscroll.js"></script>
 
 <!-- Older browsers load this file (and module-supporting -->
 <!-- browsers know when *not* to load this file). -->
-<script nomodule src="node_modules/navscroll/navscroll-legacy.js"></script>
+<script nomodule src="node_modules/navscroll/dist/navscroll-legacy.js"></script>
 ```
 
 <p class="warning" style="background: rgba(0,255,0,.05);border-radius: 3px;padding: 1.5em;">
@@ -40,23 +43,23 @@ When including it in html, it will automatically call `Vue.use` and also set a `
 
 This package was inspired by two other great packages: [vue-scrollactive](https://github.com/eddiemf/vue-scrollactive) and [vue-scrollto](https://github.com/rigor789/vue-scrollTo).
 
-- Scroll to an element inside a given container
+* Scroll to an element inside a given container
 
-- Highlights navigation items as you scroll based on the current visible section inside the scrolling container
+* Highlights navigation items as you scroll based on the current visible section inside the scrolling container
 
-- Keeps track of added/removed navigation items inside a given wrapper element with a smart DOM observer
+* Keeps track of added/removed navigation items inside a given wrapper element with a smart DOM observer
 
-- Uses `window.requestAnimationFrame` to perform the animations for performance optimization.
+* Uses `window.requestAnimationFrame` to perform the animations for performance optimization.
 
-- Supports animation cancelation
+* Supports animation cancelation
 
-- Easing done with the outstanding [bezier-easing](https://github.com/gre/bezier-easing) micro-library
+* Easing done with the outstanding [bezier-easing](https://github.com/gre/bezier-easing) micro-library
 
-- Fully customizable behavior like easing or scroll axis by passing a configuration object
+* Fully customizable behavior like easing or scroll axis by passing a configuration object
 
-- Uses passive event listeners when possible for better performance
+* Uses passive event listeners when possible for better performance
 
-- Uses vanilla JS !
+* Uses vanilla JS !
 
 Be sure to check the <a href="https://nash403.github.io/navscroll-js/examples/index.html">live demo</a> !
 
@@ -95,7 +98,7 @@ NavScroll.setDefaults({
     onCancel: false,
     scrollX: false,
     scrollY: true
-})
+});
 ```
 
 ### As a Vue Component
@@ -143,7 +146,7 @@ NavScroll.setDefaults({
 ```
 
 This will only attach the scrollTo function to the navigation items. If you also want the onScroll beahavior, then you have to explicitely call `NavScroll.initObserver(this.$refs.wrapper, '.item', optionsObject)` with the proper arguments (optionsObject would be the object passed as binding to the directives).
-<u>NOTE:</u> Be sure to call this function when both the navigation wrapper and the scrolling container are present in the DOM to properly register the handlers. 
+<u>NOTE:</u> Be sure to call this function when both the navigation wrapper and the scrolling container are present in the DOM to properly register the handlers.
 
 ### Programmatically
 
@@ -155,7 +158,9 @@ This will only attach the scrollTo function to the navigation items. If you also
         class="item">My nav item {{i}}</a>
 </nav>
 ```
+
 And in the script:
+
 ```js
 let navWrapper = document.getElementById('wrapper');
 let options = { container: '#my-scrollable-container', activeClass: 'active-element' }
@@ -231,7 +236,7 @@ All options are optional and have default values.
    * click handlers on the nav items. If the option is not set, registration will use
    * the href or the dataset.href of the registered nav item.
    * Alias: 'element'
-   * 
+   *
    * @default null
    * @type {String|HTMLElement}
    */
@@ -381,6 +386,3 @@ All options are optional and have default values.
   navItems: [],
 }
 ```
-
-
-
