@@ -43,7 +43,7 @@ When including it in html, it will automatically call `Vue.use` and also set a `
 
 This package was inspired by two other great packages: [vue-scrollactive](https://github.com/eddiemf/vue-scrollactive) and [vue-scrollto](https://github.com/rigor789/vue-scrollTo).
 
-* Scroll to an element inside a given container
+* Scroll to an element inside a given container (if you only need this feature, got to [the usage section below](#onlyscrollto))
 
 * Highlights navigation items as you scroll based on the current visible section inside the scrolling container
 
@@ -70,7 +70,7 @@ NavScroll.js can be used either as a vue component, a vue directive or programat
 In your JS:
 
 ```js
-let NavScroll = require('navscroll');
+import NavScroll from 'navscroll';
 Vue.use(NavScroll);
 
 // This will register both a "navscroll" directive and component globally. You can rename as follow in your Vue instances:
@@ -177,7 +177,7 @@ NavScroll.initObserver(navWrapper, '.item', options)
 })
 
 // Another alternative
-var NavScroll = require('navscroll');
+import NavScroll from 'navscroll';
 
 var options = {
     container: '#my-scrollable-container',
@@ -202,6 +202,22 @@ cancelScroll = this.$scrollTo(targetElement, duration, options)
 // to cancel scrolling you can call the returned function
 cancelScroll()
 ```
+
+#### <a id="onlyscrollto"></a> <u>You only need the scrollTo feature ?</u>
+
+If you only need the scrollTo feature just import the scroll-to.js script instead of the whole navscoll lib in your browser or module:
+
+```js
+import ScrollTo from "navcroll/dist/scroll-to";
+```
+
+or in html:
+
+```html
+<script src="/node_modules/dist/navscroll/scroll-to.js"></script>
+```
+
+In browser environment, this will add the NavScrollTo function to the window object. The function has the following signature: `NavScrollTo(targetElement, duration, options)`.
 
 ## Configuration
 

@@ -33,7 +33,7 @@ const baseConfig = {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
     filename: "[name].js",
-    library: "NavScroll",
+    library: "NavScrollTo",
     libraryTarget: "umd",
     libraryExport: "default",
     umdNamedDefine: true
@@ -56,7 +56,7 @@ const baseConfig = {
 
 const modernConfig = Object.assign({}, baseConfig, {
   entry: {
-    navscroll: path.resolve(__dirname, "src", "index.js")
+    "scroll-to": path.resolve(__dirname, "src", "scrollTo.js")
   },
   module: {
     rules: [
@@ -80,7 +80,7 @@ const modernConfig = Object.assign({}, baseConfig, {
 
 const legacyConfig = Object.assign({}, baseConfig, {
   entry: {
-    "navscroll-legacy": path.resolve(__dirname, "src", "index.js")
+    "scroll-to-legacy": path.resolve(__dirname, "src", "scrollTo.js")
   },
   module: {
     rules: [configureBabelLoader(["> 1%", "last 2 versions", "Firefox ESR"])]
