@@ -263,7 +263,7 @@ const getVueComponentProps = params => params ? _getVueComponentProps(params) : 
 function _getVueComponentProps(params) {
   let props = {};
   for (let prop in params) {
-    let type = getType(params[prop]);
+    let type = ['container'].includes(prop) ? null : getType(params[prop]);
     props[prop] = {
       type,
       default: type === Array || type === Object ? () => params[prop] : params[prop]
