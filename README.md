@@ -303,7 +303,12 @@ All options are optional and have default values.
   * Threshold amount of space between left side of screen and the section to
   * highlight as the current one (for the onScroll handler).
   *
-  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called)
+  * @default (2/3 of the X axis of the screen, calculated each time onScroll is called). Here's the formula:
+  * ```
+  * Math.round(
+  *   (window.innerWidth || document.documentElement.clientWidth) / 3
+  * ) * 2
+  * ```
   * @type {Number}
   */
   onScrollOffsetX: undefined,
@@ -311,8 +316,13 @@ All options are optional and have default values.
   * Threshold amount of space between top side of screen and the section to
   * highlight as the current one (for the onScroll handler).
   *
-  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called)
-  * @type {Number}
+  * @default (2/3 of the Y axis of the screen, calculated each time onScroll is called). Here's the formula:
+  * ```
+  * Math.round(
+  *   (window.innerHeight || document.documentElement.clientHeight) / 3
+  * ) * 2
+  * ```
+  * @type {Number}
   */
   onScrollOffsetY: undefined,
   /**
