@@ -189,7 +189,7 @@ export const getVueComponentProps = params =>
 export function _getVueComponentProps(params) {
   let props = {};
   for (let prop in params) {
-    let type = getType(params[prop]);
+    let type = ['container'].includes(prop) ? null : getType(params[prop]);
     props[prop] = {
       type,
       default:
