@@ -616,11 +616,12 @@ let lastActiveItem;
    * `navscroll` component definition. `this.$props` will be the options object.
    */
   props: Object(__WEBPACK_IMPORTED_MODULE_2__default_props__["b" /* getVueComponentProps */])(),
-  template: `
-    <nav class="navscroll-js">
-      <slot></slot>
-    </nav>
-  `,
+  render(h) {
+    return h('nav', {
+      class: 'navscroll-js'
+    }, this.$slots.default);
+  },
+
   mounted() {
     onBind(this.$el, this.$props, true);
   },
