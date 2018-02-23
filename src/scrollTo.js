@@ -1,239 +1,235 @@
-import BezierEasing from "bezier-easing";
-import _ from "./utils";
-import defaults from "./default-props";
+import BezierEasing from 'bezier-easing'
+import _ from './utils'
+import defaults from './default-props'
 
 const abortEvents = [
   // Events that can cancel the scrollTo fn
-  "mousedown",
-  "wheel",
-  "DOMMouseScroll",
-  "mousewheel",
-  "keyup",
-  "touchmove"
-];
+  'mousedown',
+  'wheel',
+  'DOMMouseScroll',
+  'mousewheel',
+  'keyup',
+  'touchmove'
+]
 
 export function setLocationHash(hash) {
-  if (!hash) return;
+  if (!hash) return
   if (window.history.pushState) {
-    window.history.pushState(null, null, hash);
+    window.history.pushState(null, null, hash)
   } else {
-    window.location.hash = hash;
+    window.location.hash = hash
   }
 }
 
 const scroller = () => {
-  let targetElement; // element to scroll to
-  let container; // container to scroll
-  let duration; // duration of the scrolling
-  let easing; // easing to be used when scrolling
-  let offset; // offset to be added (subtracted)
-  let cancelable; // indicates if user can cancel the scroll or not.
-  let onDone; // callback when scrolling is done
-  let onCancel; // callback when scrolling is canceled / aborted
-  let x; // scroll on x axis
-  let y; // scroll on y axis
-  let activeClass; // class of the current navigation item
-  let clickedNavItem; // the navigation item that triggered the scrollTo
-  let hash; // hash of the clicked item if it is a link
-  let anchor; // whether to update the window.location.hash or not
-  let navItems; // the navigation items array including the clicked one
-  let alwaysTrack; // whether to keep listening to the scroll event on the container
-  let trackingFn; // the scroll event listener on the container
+  let targetElement // element to scroll to
+  let container // container to scroll
+  let duration // duration of the scrolling
+  let easing // easing to be used when scrolling
+  let offset // offset to be added (subtracted)
+  let cancelable // indicates if user can cancel the scroll or not.
+  let onDone // callback when scrolling is done
+  let onCancel // callback when scrolling is canceled / aborted
+  let x // scroll on x axis
+  let y // scroll on y axis
+  let activeClass // class of the current navigation item
+  let clickedNavItem // the navigation item that triggered the scrollTo
+  let hash // hash of the clicked item if it is a link
+  let anchor // whether to update the window.location.hash or not
+  let navItems // the navigation items array including the clicked one
+  let alwaysTrack // whether to keep listening to the scroll event on the container
+  let trackingFn // the scroll event listener on the container
 
-  let initialX; // initial X of container
-  let targetX; // target X of container
-  let initialY; // initial Y of container
-  let targetY; // target Y of container
-  let diffX; // difference
-  let diffY; // difference
+  let initialX // initial X of container
+  let targetX // target X of container
+  let initialY // initial Y of container
+  let targetY // target Y of container
+  let diffX // difference
+  let diffY // difference
 
-  let abort; // is scrolling aborted
+  let abort // is scrolling aborted
 
-  let abortEv; // event that aborted scrolling
+  let abortEv // event that aborted scrolling
   let abortFn = e => {
-    if (!cancelable) return;
-    abortEv = e;
-    abort = true;
-  };
-  let easingFn;
+    if (!cancelable) return
+    abortEv = e
+    abort = true
+  }
+  let easingFn
 
-  let timeStart; // time when scrolling started
-  let timeElapsed; // time elapsed since scrolling started
+  let timeStart // time when scrolling started
+  let timeElapsed // time elapsed since scrolling started
 
-  let progress; // progress
+  let progress // progress
 
   function scrollTop(container) {
-    let scrollTop = container.scrollTop;
+    let scrollTop = container.scrollTop
 
-    if (container.tagName.toLowerCase() === "body") {
+    if (container.tagName.toLowerCase() === 'body') {
       // in firefox body.scrollTop always returns 0
       // thus if we are trying to get scrollTop on a body tag
       // we need to get it from the documentElement
-      scrollTop = scrollTop || document.documentElement.scrollTop;
+      scrollTop = scrollTop || document.documentElement.scrollTop
     }
 
-    return scrollTop;
+    return scrollTop
   }
 
   function scrollLeft(container) {
-    let scrollLeft = container.scrollLeft;
+    let scrollLeft = container.scrollLeft
 
-    if (container.tagName.toLowerCase() === "body") {
+    if (container.tagName.toLowerCase() === 'body') {
       // in firefox body.scrollLeft always returns 0
       // thus if we are trying to get scrollLeft on a body tag
       // we need to get it from the documentElement
-      scrollLeft = scrollLeft || document.documentElement.scrollLeft;
+      scrollLeft = scrollLeft || document.documentElement.scrollLeft
     }
 
-    return scrollLeft;
+    return scrollLeft
   }
 
   function step(timestamp) {
-    if (abort) return done();
-    if (!timeStart) timeStart = timestamp;
+    if (abort) return done()
+    if (!timeStart) timeStart = timestamp
 
-    timeElapsed = timestamp - timeStart;
+    timeElapsed = timestamp - timeStart
 
-    progress = Math.min(timeElapsed / duration, 1);
-    progress = easingFn(progress);
+    progress = Math.min(timeElapsed / duration, 1)
+    progress = easingFn(progress)
 
-    topLeft(
-      container,
-      initialY + diffY * progress,
-      initialX + diffX * progress
-    );
+    topLeft(container, initialY + diffY * progress, initialX + diffX * progress)
 
     timeElapsed < duration
       ? (window.AFRequestID = window.requestAnimationFrame(step))
-      : done();
+      : done()
   }
 
   function done() {
-    if (!abort) topLeft(container, targetY, targetX);
-    timeStart = false;
+    if (!abort) topLeft(container, targetY, targetX)
+    timeStart = false
 
-    anchor && setLocationHash(hash);
+    anchor && setLocationHash(hash)
     if (alwaysTrack && !trackingFn) {
-      updateClassName(clickedNavItem, navItems);
+      updateClassName(clickedNavItem, navItems)
     }
-    if (abort && onCancel) onCancel(abortEv);
-    if (onDone) onDone();
-    _.off(container, abortEvents, abortFn);
+    if (abort && onCancel) onCancel(abortEv)
+    if (onDone) onDone()
+    _.off(container, abortEvents, abortFn)
     setTimeout(() => {
       // workaround to avoid the tracking function to be called right after we re-added it to the container
-      _.on(container, "scroll", trackingFn, { passive: true });
-    }, 100);
+      _.on(container, 'scroll', trackingFn, { passive: true })
+    }, 100)
   }
 
   function topLeft(element, top, left) {
-    if (y) element.scrollTop = top;
-    if (x) element.scrollLeft = left;
-    if (element.tagName.toLowerCase() === "body") {
+    if (y) element.scrollTop = top
+    if (x) element.scrollLeft = left
+    if (element.tagName.toLowerCase() === 'body') {
       // in firefox body.scrollTop doesn't scroll the page
       // thus if we are trying to scrollTop on a body tag
       // we need to scroll on the documentElement
-      if (y) document.documentElement.scrollTop = top;
-      if (x) document.documentElement.scrollLeft = left;
+      if (y) document.documentElement.scrollTop = top
+      if (x) document.documentElement.scrollLeft = left
     }
   }
 
   function updateClassName(element, otherElements) {
     otherElements.forEach(elem => {
-      elem.classList.remove(activeClass);
-    });
-    element && element.classList.add(activeClass);
+      elem.classList.remove(activeClass)
+    })
+    element && element.classList.add(activeClass)
   }
 
   function scrollTo(target, _duration, options = {}) {
-    if (typeof _duration === "object") {
-      options = _duration;
-    } else if (typeof _duration === "number") {
-      options.duration = _duration;
+    if (typeof _duration === 'object') {
+      options = _duration
+    } else if (typeof _duration === 'number') {
+      options.duration = _duration
     }
 
-    targetElement = _.$(target);
+    targetElement = _.$(target)
 
     if (!targetElement) {
       return console.warn(
         `[navscroll-js]: Trying to scroll to element "${target}" that is not on the page. Make sure it is set in the DOM.`
-      );
+      )
     }
 
-    const defaultOpts = defaults();
-    container = _.$(options.container || defaultOpts.container);
+    const defaultOpts = defaults()
+    container = _.$(options.container || defaultOpts.container)
     if (!container) {
       return console.warn(
         `[navscroll-js]: Scrolling container "${options.container ||
           defaultOpts.container}" is not present on the page.`
-      );
+      )
     }
-    duration = options.duration || defaultOpts.duration;
-    easing = options.easing || defaultOpts.easing;
-    offset = options.offset || defaultOpts.offset;
+    duration = options.duration || defaultOpts.duration
+    easing = options.easing || defaultOpts.easing
+    offset = options.offset || defaultOpts.offset
     cancelable =
-      "cancelable" in options
+      'cancelable' in options
         ? options.cancelable !== false
-        : defaultOpts.cancelable;
-    onDone = options.onDone || defaultOpts.onDone;
-    onCancel = options.onCancel || defaultOpts.onCancel;
-    x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX;
-    y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY;
+        : defaultOpts.cancelable
+    onDone = options.onDone || defaultOpts.onDone
+    onCancel = options.onCancel || defaultOpts.onCancel
+    x = options.scrollX === undefined ? defaultOpts.scrollX : options.scrollX
+    y = options.scrollY === undefined ? defaultOpts.scrollY : options.scrollY
     activeClass =
       options.activeClass === undefined
         ? defaultOpts.activeClass
-        : options.activeClass;
-    clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem;
+        : options.activeClass
+    clickedNavItem = options.clickedNavItem || defaultOpts.clickedNavItem
     hash = clickedNavItem
       ? clickedNavItem.hash || clickedNavItem.dataset.href
-      : options.hash || defaultOpts.hash;
-    anchor = options.anchor === undefined ? defaultOpts.anchor : options.anchor;
-    navItems = options.navItems || defaultOpts.navItems;
+      : options.hash || defaultOpts.hash
+    anchor = options.anchor === undefined ? defaultOpts.anchor : options.anchor
+    navItems = options.navItems || defaultOpts.navItems
     alwaysTrack =
       options.alwaysTrack === undefined
         ? defaultOpts.alwaysTrack
-        : options.alwaysTrack;
+        : options.alwaysTrack
     trackingFn =
-      typeof options.trackingFn === "function"
+      typeof options.trackingFn === 'function'
         ? options.trackingFn
-        : defaultOpts.trackingFn;
+        : defaultOpts.trackingFn
 
-    let cumulativeOffset = _.cumulativeOffset(targetElement);
+    let cumulativeOffset = _.cumulativeOffset(targetElement)
 
-    initialY = scrollTop(container);
-    targetY = cumulativeOffset.top - container.offsetTop - offset;
+    initialY = scrollTop(container)
+    targetY = cumulativeOffset.top - container.offsetTop - offset
 
-    initialX = scrollLeft(container);
-    targetX = cumulativeOffset.left - container.offsetLeft - offset;
+    initialX = scrollLeft(container)
+    targetX = cumulativeOffset.left - container.offsetLeft - offset
 
-    abort = false;
+    abort = false
 
-    diffY = targetY - initialY;
-    diffX = targetX - initialX;
+    diffY = targetY - initialY
+    diffX = targetX - initialX
 
-    easing = _.cubicBezierArrayFrom(easing);
+    easing = _.cubicBezierArrayFrom(easing)
 
-    easingFn = BezierEasing.apply(BezierEasing, easing);
+    easingFn = BezierEasing.apply(BezierEasing, easing)
 
-    if (!diffY && !diffX) return;
+    if (!diffY && !diffX) return
 
     if (!alwaysTrack) {
-      _.off(container, "scroll", trackingFn);
-      window.cancelAnimationFrame(window.AFRequestID);
-      updateClassName(clickedNavItem, navItems);
+      _.off(container, 'scroll', trackingFn)
+      window.cancelAnimationFrame(window.AFRequestID)
+      updateClassName(clickedNavItem, navItems)
     }
 
-    _.on(container, abortEvents, abortFn, { passive: true });
+    _.on(container, abortEvents, abortFn, { passive: true })
 
-    window.requestAnimationFrame(step);
+    window.requestAnimationFrame(step)
 
     return () => {
-      abortEv = null;
-      abort = true;
-    };
+      abortEv = null
+      abort = true
+    }
   }
 
-  return scrollTo;
-};
+  return scrollTo
+}
 
-const _scroller = scroller();
-export default _scroller;
+const _scroller = scroller()
+export default _scroller

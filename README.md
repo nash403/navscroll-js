@@ -23,20 +23,11 @@ yarn add navscroll
 Directly include it in html:
 
 ```html
-<!-- Browsers with ES module support load this file. -->
-<script type="module" src="node_modules/navscroll/dist/navscroll.js"></script>
-
-<!-- Older browsers load this file (and module-supporting -->
-<!-- browsers know when *not* to load this file). -->
-<script nomodule src="node_modules/navscroll/dist/navscroll-legacy.js"></script>
+<script src="node_modules/navscroll/dist/navscroll.js"></script>
 ```
 
-<p class="warning" style="background: rgba(0,255,0,.05);border-radius: 3px;padding: 1.5em;">
-Warning! The only gotcha here is Safari 10 doesn’t support the nomodule attribute, but you can solve this by <a href="https://gist.github.com/samthor/64b114e4a4f539915a95b91ffd340acc">inlining a JavaScript snippet</a> in your HTML prior to using any <code>&#x3C;script nomodule&#x3E;</code> tags. (Note: this has been fixed in Safari 11).
-</p>
-
 <p class="tip" style="background-color: #DCF2FD;color: #618ca0;padding: 0.75em 1em;">
-When including it in html, it will automatically call `Vue.use` and also set a `NavScroll` variable on the window object that you can use !
+When including it in html, it will automatically call `Vue.use` and also set a `NavScroll` property on the window object that you can use !
 </p>
 
 ## Features
@@ -89,16 +80,16 @@ You can set the defaults with
 
 ```js
 NavScroll.setDefaults({
-    container: "body",
+    container: 'body',
     duration: 500,
-    easing: "ease",
+    easing: 'ease',
     offset: 0,
     cancelable: true,
     onDone: false,
     onCancel: false,
     scrollX: false,
     scrollY: true
-});
+})
 ```
 
 ### As a Vue Component
@@ -208,7 +199,7 @@ cancelScroll()
 If you only need the scrollTo feature just import the scroll-to.js script instead of the whole navscoll lib in your browser or module:
 
 ```js
-import ScrollTo from "navcroll/dist/scroll-to";
+import ScrollTo from 'navcroll/dist/scroll-to'
 ```
 
 or in html:
@@ -223,7 +214,7 @@ In browser environment, this will add the NavScrollTo function to the window obj
 
 All options are optional and have default values.
 
-```js
+````js
 {
   /**
   * The scrollable container.
@@ -411,4 +402,4 @@ All options are optional and have default values.
   */
   navItems: [],
 }
-```
+````

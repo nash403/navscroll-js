@@ -1,11 +1,9 @@
-import "./main.scss";
+import './main.scss'
 
-import NavScroll from "../../";
-
-Vue.use(NavScroll);
+Vue.use(window.NavScroll)
 
 let NavigationExample1 = {
-  props: ["entries", ...Object.keys(NavScroll.getDefaults())],
+  props: ['entries', ...Object.keys(NavScroll.getDefaults())],
   template: `
     <navscroll class="nav-scroll-items entries"
       :container="container"
@@ -29,10 +27,10 @@ let NavigationExample1 = {
       </a>
     </navscroll>
   `
-};
+}
 
 let NavigationExample2 = {
-  props: ["entries", ...Object.keys(NavScroll.getDefaults())],
+  props: ['entries', ...Object.keys(NavScroll.getDefaults())],
   template: `
     <nav class="nav-scroll-items entries"
       v-navscroll:item="{
@@ -49,18 +47,18 @@ let NavigationExample2 = {
       </a>
     </nav>
   `
-};
+}
 
 let NavigationExample3 = {
-  props: ["entries", ...Object.keys(NavScroll.getDefaults())],
+  props: ['entries', ...Object.keys(NavScroll.getDefaults())],
   mounted() {
-    NavScroll.initObserver(this.$refs.wrapper, ".item", this.$props);
+    NavScroll.initObserver(this.$refs.wrapper, '.item', this.$props)
   },
   updated() {
-    NavScroll.initObserver(this.$refs.wrapper, ".item", this.$props);
+    NavScroll.initObserver(this.$refs.wrapper, '.item', this.$props)
   },
   beforeDestroy() {
-    NavScroll.unbindObserver(this.$props);
+    NavScroll.unbindObserver(this.$props)
   },
   template: `
     <nav id="nav-wrapper" ref="wrapper" class="nav-scroll-items entries">
@@ -78,74 +76,74 @@ let NavigationExample3 = {
       </a>
     </nav>
   `
-};
+}
 
 function format(str) {
   return str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-    return "&#" + i.charCodeAt(0) + ";";
-  });
+    return '&#' + i.charCodeAt(0) + ';'
+  })
 }
 
 new Vue({
-  el: "#app",
+  el: '#app',
   components: {
-    "nav-ex1": NavigationExample1,
-    "nav-ex2": NavigationExample2,
-    "nav-ex3": NavigationExample3
+    'nav-ex1': NavigationExample1,
+    'nav-ex2': NavigationExample2,
+    'nav-ex3': NavigationExample3
   },
   data() {
     return {
-      sidebar: "nav-ex1",
+      sidebar: 'nav-ex1',
       entriesArray: Array.from(new Array(4), (_, i) => i),
-      container: "#scrollable-content",
-      activeClass: "active-position",
-      preClass: "",
+      container: '#scrollable-content',
+      activeClass: 'active-position',
+      preClass: '',
       codes: {
-        "nav-ex1": format(NavigationExample1.template),
-        "nav-ex2": format(NavigationExample2.template),
-        "nav-ex3": format(NavigationExample3.template)
+        'nav-ex1': format(NavigationExample1.template),
+        'nav-ex2': format(NavigationExample2.template),
+        'nav-ex3': format(NavigationExample3.template)
       },
 
       alwaysTrack: false,
       duration: 600,
       offset: 60,
-      easing: ".5,0,.35,1",
+      easing: '.5,0,.35,1',
       anchor: false,
       cancelable: true,
-      scrollAxis: "y"
-    };
+      scrollAxis: 'y'
+    }
   },
   computed: {
     entries() {
-      return Array.from(this.entriesArray, (_, i) => i).map(i => `entry-${i}`);
+      return Array.from(this.entriesArray, (_, i) => i).map(i => `entry-${i}`)
     },
 
     prop() {
       return {
         entries: this.entries,
-        container: "#scrollable-content",
-        activeClass: "active-position",
+        container: '#scrollable-content',
+        activeClass: 'active-position',
         alwaysTrack: this.alwaysTrack,
         duration: this.duration,
         offset: this.offset,
         easing: this.easing,
         anchor: this.anchor,
         cancelable: this.cancelable,
-        scrollX: this.scrollAxis === "x",
-        scrollY: this.scrollAxis === "y"
-      };
+        scrollX: this.scrollAxis === 'x',
+        scrollY: this.scrollAxis === 'y'
+      }
     },
 
     code() {
-      return this.codes[this.sidebar];
+      return this.codes[this.sidebar]
     }
   },
   methods: {
     toggleOptions(ev) {
-      let optionsEl = this.$refs.options;
-      optionsEl.classList.toggle("visible");
-      optionsEl.style.bottom = "initial";
-      optionsEl.style.top = `${ev.srcElement.getBoundingClientRect().top}px`;
+      let optionsEl = this.$refs.options
+      optionsEl.classList.toggle('visible')
+      optionsEl.style.bottom = 'initial'
+      optionsEl.style.top = `${ev.srcElement.getBoundingClientRect().top}px`
     }
   }
-});
+})

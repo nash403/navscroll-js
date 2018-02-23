@@ -6,21 +6,21 @@ let defaults = {
    * @default 'body'
    * @type {String|HTMLElement}
    */
-  container: "body",
+  container: 'body',
   /**
    * Selector that will be used to recognize the navigation items inside the navigation wrapper.
    *
    * @default  'scroll-item'
    * @type {String}
    */
-  itemSelector: ".scroll-item",
+  itemSelector: '.scroll-item',
   /**
    * Class that will be applied to the menu item after the scroll animation.
    *
    * @default  'active'
    * @type {String}
    */
-  activeClass: "active",
+  activeClass: 'active',
   /**
    * The target element/selector for the scrollTo method. Only used when registering
    * click handlers on the nav items. If the option is not set, registration will use
@@ -50,7 +50,7 @@ let defaults = {
    * @default 'ease'
    * @type {String|Array}
    */
-  easing: "ease",
+  easing: 'ease',
   /**
    * Whether to scroll on the X axis
    *
@@ -174,50 +174,50 @@ let defaults = {
    * @type {Array<HTMLElement>}
    */
   navItems: []
-};
+}
 
 export const setDefaults = options =>
-  (defaults = Object.assign({}, defaults, options));
+  (defaults = Object.assign({}, defaults, options))
 
 export default function getDefaults(options) {
-  return defaults;
+  return defaults
 }
 
 export const getVueComponentProps = params =>
-  params ? _getVueComponentProps(params) : _getVueComponentProps(defaults);
+  params ? _getVueComponentProps(params) : _getVueComponentProps(defaults)
 
 export function _getVueComponentProps(params) {
-  let props = {};
+  let props = {}
   for (let prop in params) {
-    let type = ['container'].includes(prop) ? null : getType(params[prop]);
+    let type = ['container'].includes(prop) ? null : getType(params[prop])
     props[prop] = {
       type,
       default:
         type === Array || type === Object ? () => params[prop] : params[prop]
-    };
+    }
   }
-  return props;
+  return props
 }
 
 function getType(value) {
-  const type = obj => Object.prototype.toString.call(obj).slice(8, -1);
+  const type = obj => Object.prototype.toString.call(obj).slice(8, -1)
 
   switch (type(value)) {
-    case "Object":
-      return Object;
-    case "Array":
-      return Array;
-    case "String":
-      return String;
-    case "Number":
-      return Number;
-    case "Boolean":
-      return Boolean;
-    case "RegExp":
-      return RegExp;
-    case "Undefined":
-    case "Null":
+    case 'Object':
+      return Object
+    case 'Array':
+      return Array
+    case 'String':
+      return String
+    case 'Number':
+      return Number
+    case 'Boolean':
+      return Boolean
+    case 'RegExp':
+      return RegExp
+    case 'Undefined':
+    case 'Null':
     default:
-      return null;
+      return null
   }
 }
