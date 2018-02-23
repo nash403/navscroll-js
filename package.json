@@ -1,6 +1,6 @@
 {
   "name": "navscroll",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "title": "NavScroll.js",
   "description": "Lightweight package for highlighting menu items as you scroll the page, also scrolling to target section when item clicked. Use as a vue component/directive or in vanilla js.",
   "main": "dist/navscroll.js",
